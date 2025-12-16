@@ -1,0 +1,10 @@
+    // Handler for the Select component
+    const onStatusSelectChange = (value: string) => {
+        if (value === "approved") {
+            handleApprove();
+        } else if (value === "declined") {
+            handleDecline();
+        } else if (value === "paid") {
+            handleMarkAsPaid();
+        }
+    };

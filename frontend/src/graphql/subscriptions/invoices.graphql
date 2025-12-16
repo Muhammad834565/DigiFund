@@ -1,0 +1,11 @@
+subscription InvoiceReceived {
+  invoiceReceived {
+    invoice_number
+    invoice_type
+    total_amount
+    status
+    invoice_date
+    bill_from_name
+    bill_to_name
+  }
+}

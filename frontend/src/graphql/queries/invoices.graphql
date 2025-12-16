@@ -1,0 +1,65 @@
+query GetMyInvoices {
+  getInvoices {
+    id
+    invoice_number
+    invoice_type
+    status
+    bill_from_public_id
+    bill_to_public_id
+    bill_from_status
+    bill_to_status
+    invoice_date
+    total_amount
+    bill_from_name
+    bill_to_name
+    created_at
+    items {
+      inventory_id
+      qty
+      rate
+      discount_percentage
+      total_price
+    }
+  }
+}
+
+query GetInvoice($invoice_number: String!) {
+  getInvoiceByNumber(invoice_number: $invoice_number) {
+    id
+    invoice_number
+    invoice_type
+    status
+    bill_from_public_id
+    bill_to_public_id
+    bill_from_status
+    bill_to_status
+    invoice_date
+    total_amount
+    bill_from_name
+    bill_from_email
+    bill_from_phone
+    bill_from_address
+    bill_to_name
+    bill_to_email
+    bill_to_phone
+    bill_to_address
+    items {
+      id
+      inventory_id
+      qty
+      rate
+      discount_percentage
+      total_price
+    }
+    created_at
+    updated_at
+  }
+}
+
+query GetInvoicesForCharts {
+  invoices: getInvoices {
+    id
+    created_at
+    total_amount
+  }
+}

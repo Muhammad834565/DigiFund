@@ -1,0 +1,60 @@
+# Authentication Mutations
+
+mutation Signup($input: SignupInput!) {
+  signup(input: $input) {
+    message
+    email
+  }
+}
+
+mutation VerifyOtp($input: VerifyOtpInput!) {
+  verifyOtp(input: $input) {
+    success
+    message
+  }
+}
+
+mutation ResendOtp($input: ResendOtpInput!) {
+  resendOtp(input: $input) {
+    message
+    success
+  }
+}
+
+mutation Login($input: LoginInput!) {
+  login(input: $input) {
+    token
+    company_name
+    public_id
+    private_id
+    contact_person
+    email
+    phone_no
+    address
+    status
+    gender
+    type_of_business
+    role
+  }
+}
+
+mutation ForgotPassword($input: ForgotPasswordInput!) {
+  forgotPassword(input: $input) {
+    success
+    message
+  }
+}
+
+mutation ResetPassword($input: ResetPasswordInput!) {
+  resetPassword(input: $input) {
+    success
+    message
+  }
+}
+
+mutation Logout {
+  logout {
+    success
+    message
+  }
+}

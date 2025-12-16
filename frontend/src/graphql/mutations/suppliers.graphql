@@ -1,0 +1,24 @@
+mutation SendSupplierRequest($input: SendRelationshipRequestInput!) {
+  sendRelationshipRequest(input: $input) {
+    id
+    requester_public_id
+    requested_public_id
+    relationship_type
+    status
+    created_at
+  }
+}
+
+mutation AcceptRequest($input: AcceptRejectRequestInput!) {
+  acceptRejectRequest(input: $input) {
+    id
+    status
+    updated_at
+  }
+}
+
+# mutation DeleteSupplier($supplier_id: ID!) {
+#   deleteSupplier(supplier_id: $supplier_id) {
+#     message
+#   }
+# }

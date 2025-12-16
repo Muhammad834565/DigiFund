@@ -1,0 +1,14 @@
+# Dashboard Query
+
+query GetDashboardStats {
+  dashboardStats {
+    id
+    totalCustomers
+    totalProducts
+    totalInvoices
+    totalRevenue
+    activeUsers
+    pendingInvoices
+    timestamp
+  }
+}

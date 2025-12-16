@@ -1,0 +1,51 @@
+mutation CreateInventory($input: CreateInventoryInput!) {
+  createInventory(input: $input) {
+    id
+    inventory_id
+    description
+    price
+    quantity
+    sku
+    images
+    created_at
+  }
+}
+
+mutation UpdateInventory($inventory_id: String!, $input: UpdateInventoryInput!) {
+  updateInventory(inventory_id: $inventory_id, input: $input) {
+    inventory_id
+    description
+    price
+    quantity
+    updated_at
+  }
+}
+
+mutation DeleteInventory($inventory_id: String!) {
+  deleteInventory(inventory_id: $inventory_id) {
+    message
+  }
+}
+
+mutation IndexAllProducts {
+  indexAllProducts
+}
+
+mutation GenerateMissingSummaries {
+  generateMissingSummaries {
+    totalRows
+    successfulRows
+    failedRows
+    errors
+    message
+  }
+}
+
+mutation GenerateProductSummary($input: GenerateSummaryInput!) {
+  generateProductSummary(input: $input) {
+    productId
+    summary
+    keyFeatures
+    targetAudience
+  }
+}

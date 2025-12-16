@@ -1,0 +1,35 @@
+query GetMyRequests {
+  getMyRelationshipRequests {
+    id
+    requester_public_id
+    requested_public_id
+    relationship_type
+    status
+    created_at
+  }
+}
+
+query GetMySuppliers {
+  getSuppliers {
+    id
+    supplier_public_id
+    company_name
+    contact_person
+    email
+    phone_no
+    location
+    status
+    created_at
+  }
+}
+
+query SearchUser($input: SearchUserInput!) {
+  searchUser(input: $input) {
+    public_id
+    company_name
+    contact_person
+    email
+    phone_no
+    role
+  }
+}

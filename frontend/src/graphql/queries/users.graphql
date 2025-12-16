@@ -1,0 +1,61 @@
+# User Queries
+
+query GetMyProfile {
+  me {
+    id
+    public_id
+    private_id
+    company_name
+    contact_person
+    email
+    phone_no
+    address
+    status
+    gender
+    type_of_business
+    role
+    is_verified
+    created_at
+    updated_at
+  }
+}
+
+query GetUserByPublicId($public_id: String!) {
+  getUserByPublicId(public_id: $public_id) {
+    public_id
+    company_name
+    contact_person
+    email
+    phone_no
+    role
+  }
+}
+
+query SearchUser($input: SearchUserInput!) {
+  searchUser(input: $input) {
+    public_id
+    company_name
+    contact_person
+    email
+    phone_no
+    role
+  }
+}
+
+# query GetAllUsers {
+#   users {
+#     id
+#     name
+#     email
+#     role
+#   }
+# }
+
+# query GetUserById($id: String!) {
+#   user(id: $id) {
+#     id
+#     name
+#     email
+#     role
+#   }
+# }

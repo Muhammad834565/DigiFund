@@ -1,0 +1,53 @@
+query ExportProductsCSV {
+  exportData(input: { dataType: "products", format: "csv" }) {
+    format
+    fileName
+    fileUrl
+    recordCount
+  }
+}
+
+query ExportProductsExcel {
+  exportData(input: { dataType: "products", format: "excel" }) {
+    format
+    fileName
+    fileUrl
+    recordCount
+  }
+}
+
+query ExportCustomersCSV {
+  exportData(input: { dataType: "customers", format: "csv" }) {
+    format
+    fileName
+    fileUrl
+    recordCount
+  }
+}
+
+query ExportCustomersExcel {
+  exportData(input: { dataType: "customers", format: "excel" }) {
+    format
+    fileName
+    fileUrl
+    recordCount
+  }
+}
+
+query ExportInvoicesCSV {
+  exportData(input: { dataType: "invoices", format: "csv" }) {
+    format
+    fileName
+    fileUrl
+    recordCount
+  }
+}
+
+query ExportInvoicesExcel {
+  exportData(input: { dataType: "invoices", format: "excel" }) {
+    format
+    fileName
+    fileUrl
+    recordCount
+  }
+}

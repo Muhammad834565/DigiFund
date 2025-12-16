@@ -1,0 +1,22 @@
+query GetRecommendations($input: RecommendationInput!) {
+  getRecommendations(input: $input) {
+    id
+    name
+    description
+    price
+    stock
+    confidence
+    reason
+  }
+}
+
+query SemanticSearch($input: SemanticSearchInput!) {
+  semanticSearch(input: $input) {
+    id
+    name
+    description
+    price
+    stock
+    similarityScore
+  }
+}

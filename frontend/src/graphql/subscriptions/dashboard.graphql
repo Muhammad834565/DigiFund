@@ -1,0 +1,14 @@
+# Dashboard Subscriptions
+
+subscription DashboardLiveStats {
+  dashboardStatsUpdated {
+    id
+    totalCustomers
+    totalProducts
+    totalInvoices
+    totalRevenue
+    activeUsers
+    pendingInvoices
+    timestamp
+  }
+}

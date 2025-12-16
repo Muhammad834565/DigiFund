@@ -1,0 +1,35 @@
+# Chat Queries
+
+query GetRoomMessages($roomId: String!) {
+  chatRoomMessages(roomId: $roomId) {
+    id
+    senderId
+    receiverId
+    message
+    createdAt
+  }
+}
+
+query GetUserChatRooms {
+  userChatRooms {
+    id
+    name
+    participantIds
+    createdAt
+  }
+}
+
+# RAG Chat Queries
+
+query GetRagDataSummary {
+  getRagDataSummary
+}
+
+query QueryWithRag($query: String!) {
+  queryWithRag(input: { query: $query }) {
+    answer
+    sources
+    confidenceScore
+    followUpSuggestions
+  }
+}

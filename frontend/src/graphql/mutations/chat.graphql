@@ -1,0 +1,38 @@
+# Chat Mutations
+
+mutation CreateChatRoom($input: CreateRoomInput!) {
+  createChatRoom(input: $input) {
+    id
+    name
+    participantIds
+    createdAt
+  }
+}
+
+mutation SendChatMessage($input: SendMessageInput!) {
+  sendChatMessage(input: $input) {
+    id
+    roomId
+    senderId
+    receiverId
+    message
+    createdAt
+  }
+}
+
+mutation JoinChatRoom($input: JoinRoomInput!) {
+  joinChatRoom(input: $input) {
+    id
+    name
+    participantIds
+  }
+}
+
+mutation GetOrCreatePrivateChatRoom($receiverId: String!) {
+  getOrCreatePrivateChatRoom(receiverId: $receiverId) {
+    id
+    name
+    participantIds
+    createdAt
+  }
+}

@@ -1,0 +1,29 @@
+query GetMyInventory {
+  getInventory {
+    id
+    inventory_id
+    name
+    description
+    price
+    quantity
+    unit_price
+    sku
+    images
+    created_at
+    updated_at
+  }
+}
+
+query GetInventoryItem($inventory_id: String!) {
+  getInventoryById(inventory_id: $inventory_id) {
+    id
+    inventory_id
+    name
+    description
+    price
+    quantity
+    unit_price
+    sku
+    images
+  }
+}

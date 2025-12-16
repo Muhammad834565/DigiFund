@@ -1,0 +1,47 @@
+forntend
+	Next js
+		Graphql(API)
+			Query
+			Mutuation
+			Subscription
+			(Codegen)
+		chart 
+		Ai summary bot
+		Ai chat bot
+		Socket to comunicate between user and supplier
+		Embeding model
+			Open route
+		Pages
+			Login
+			Signup
+			Forgetpassword
+			verify otp
+			cookies server side
+	
+			Dashboard
+				
+			Finace
+			Invoice
+			Inventory
+			Supplier
+			Costomer	
+			Shopping
+
+
+
+backend
+	Nest js
+		Graphql(API)
+			Query
+			Mutuation
+			Subscription
+		Nodemailer smtp
+		open route ai bot
+		rag
+		Authentication
+		Authorization
+		Gurads
+		
+
+db
+	postgress sql

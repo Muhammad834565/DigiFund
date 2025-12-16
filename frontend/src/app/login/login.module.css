@@ -1,0 +1,209 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(to right, #a2a2a2, #dcdcdc);
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapper {
+  display: flex;
+  width: 900px;
+  background: var(--w);
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.leftPanel {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to right, #000000, #333333);
+  padding: 40px;
+}
+
+.leftPanel h1 {
+  font-size: 48px;
+}
+
+.digi {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.fund {
+  color: #c0392b;
+  font-weight: bold;
+}
+
+.hyphen {
+  color: #ffffff;
+  font-weight: bold;
+  margin: 0 2px;
+}
+
+.loginBox {
+  width: 50%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.heading {
+  color: var(--button);
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 28px;
+}
+
+.loginLabel {
+  color: var(--button);
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.inputField {
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  color: var(--foreground);
+  background: var(--w);
+  font-size: 14px;
+}
+
+.inputField:focus {
+  border-color: var(--button);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.2);
+}
+
+.passwordField {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordField input {
+  flex: 1;
+  padding-right: 40px;
+}
+
+.toggleEye {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--button);
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #666;
+  cursor: pointer;
+}
+
+.remember input {
+  cursor: pointer;
+}
+
+.forgot {
+  color: var(--button);
+  text-decoration: none;
+}
+
+.forgot:hover {
+  text-decoration: underline;
+}
+
+.error {
+  padding: 12px;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.error p {
+  font-size: 14px;
+  color: #991b1b;
+  margin: 0;
+}
+
+.loginBtn {
+  background: transparent;
+  color: #ef4444;
+  border: 2px solid #ef4444;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.loginBtn:hover:not(:disabled) {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.loginBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.signup {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+}
+
+.signup a {
+  color: var(--button);
+  text-decoration: none;
+}
+
+.signup a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+    width: 100%;
+    margin: 20px;
+  }
+
+  .leftPanel {
+    width: 100%;
+    padding: 30px;
+  }
+
+  .leftPanel h1 {
+    font-size: 36px;
+  }
+
+  .loginBox {
+    width: 100%;
+    padding: 30px;
+  }
+}

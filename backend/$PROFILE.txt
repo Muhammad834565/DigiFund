@@ -1,0 +1,7 @@
+New-Item -Type File -Path $PROFILE -Force
+notepad $PROFILE
+
+function Prompt {
+    $current = Split-Path -Leaf (Get-Location)
+    "$current> "
+}

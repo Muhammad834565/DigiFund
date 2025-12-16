@@ -1,0 +1,590 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserMain {
+  id: Int!
+  public_id: String!
+  private_id: String!
+  company_name: String
+  contact_person: String!
+  email: String!
+  phone_no: String!
+  address: String
+  status: String!
+  gender: String
+  type_of_business: String
+  role: String!
+  is_verified: Boolean!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type LoginResponse {
+  token: String!
+  company_name: String!
+  public_id: String!
+  private_id: String!
+  contact_person: String!
+  email: String!
+  phone_no: String!
+  address: String
+  status: String!
+  gender: String
+  type_of_business: String
+  role: String!
+}
+
+type SignupResponse {
+  message: String!
+  email: String!
+  user: UserMain
+}
+
+type OtpResponse {
+  message: String!
+  success: Boolean!
+}
+
+type LogoutResponse {
+  message: String!
+  success: Boolean!
+}
+
+type Customer {
+  id: ID!
+  name: String!
+  owner_public_id: String!
+  phone: String
+  email: String
+  address: String
+  createdAt: DateTime!
+}
+
+type InvoiceItem {
+  id: Int!
+  invoice_id: Int!
+  inventory_id: String!
+  qty: Float!
+  rate: Float!
+  discount_percentage: Float!
+  total_price: Float!
+}
+
+type InventoryMaster {
+  id: Int!
+  inventory_id: String!
+  owner_public_id: String!
+  name: String!
+  description: String!
+  price: Float!
+  quantity: Int!
+  unit_price: Float!
+  sku: String
+  images: [String!]
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+type InvoiceItemType {
+  id: Int!
+  invoice_id: Int!
+  inventory_id: String!
+  qty: Float!
+  rate: Float!
+  discount_percentage: Float!
+  total_price: Float!
+}
+
+type InvoiceType {
+  id: Int!
+  invoice_number: String!
+  invoice_type: String!
+  status: String!
+  bill_from_public_id: String!
+  bill_to_public_id: String!
+  bill_from_status: String!
+  bill_to_status: String!
+  invoice_date: DateTime!
+  total_amount: Float!
+  bill_to_name: String
+  bill_to_address: String
+  bill_to_email: String
+  bill_to_phone: String
+  bill_from_name: String
+  bill_from_address: String
+  bill_from_email: String
+  bill_from_phone: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  items: [InvoiceItemType!]
+}
+
+type MessageResponse {
+  message: String!
+}
+
+type DashboardStatsType {
+  id: String!
+  totalCustomers: Int!
+  totalProducts: Int!
+  totalInvoices: Int!
+  totalRevenue: Float!
+  activeUsers: Int!
+  pendingInvoices: Int!
+  timestamp: DateTime!
+}
+
+type InvoiceDailyStat {
+  date: String!
+  count: Int!
+  totalAmount: Float!
+}
+
+type InvoiceChartData {
+  last7Days: [InvoiceDailyStat!]!
+}
+
+type TransactionItem {
+  date: DateTime!
+  invoice_number: String!
+  description: String!
+  category: String!
+  amount: Float!
+  type: String!
+}
+
+type SalesByItem {
+  item_name: String!
+  total_amount: Float!
+}
+
+type MonthlySales {
+  month: String!
+  total_amount: Float!
+}
+
+type WeeklySales {
+  day: String!
+  total_amount: Float!
+}
+
+type MonthlySalesCount {
+  month: String!
+  count: Int!
+}
+
+type FinanceCharts {
+  sales_by_item: [SalesByItem!]!
+  monthly_sales: [MonthlySales!]!
+  weekly_sales: [WeeklySales!]!
+  monthly_sales_count: [MonthlySalesCount!]!
+}
+
+type FinanceDashboard {
+  total_income: Float!
+  total_expense: Float!
+  balance: Float!
+  transactions: [TransactionItem!]!
+  charts: FinanceCharts!
+}
+
+type ChatRoomType {
+  id: ID!
+  name: String!
+  participantIds: [String!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ChatMessageType {
+  id: ID!
+  roomId: String!
+  senderId: String!
+  receiverId: String
+  message: String!
+  createdAt: DateTime!
+}
+
+type UserJoinedRoomType {
+  roomId: String!
+  userId: String!
+}
+
+type SemanticSearchResult {
+  id: ID!
+  name: String!
+  description: String
+  price: Float!
+  stock: Int!
+  similarityScore: Float!
+}
+
+type ProductRecommendation {
+  id: ID!
+  name: String!
+  description: String
+  price: Float!
+  stock: Int!
+  confidence: Float!
+  reason: String!
+}
+
+type ProductSummary {
+  productId: ID!
+  summary: String!
+  keyFeatures: [String!]!
+  targetAudience: String!
+}
+
+type CsvUploadResult {
+  totalRows: Int!
+  successfulRows: Int!
+  failedRows: Int!
+  errors: [String!]!
+  message: String!
+}
+
+type RagResponse {
+  answer: String!
+  sources: [String!]!
+  confidenceScore: Int!
+  followUpSuggestions: [String!]
+}
+
+type AnomalyDetectionResult {
+  id: ID!
+  productId: ID!
+  productName: String!
+  anomalyType: String!
+  description: String!
+  anomalyScore: Float!
+  detectedAt: DateTime!
+}
+
+type DataExportResult {
+  fileName: String!
+  fileUrl: String!
+  recordCount: Int!
+  format: String!
+}
+
+type RelationshipRequest {
+  id: Int!
+  requester_public_id: String!
+  requested_public_id: String!
+  relationship_type: String!
+  status: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+type SupplierResponse {
+  id: Int!
+  supplier_public_id: String!
+  company_name: String
+  contact_person: String!
+  email: String!
+  phone_no: String!
+  location: String
+  status: String!
+  created_at: DateTime!
+}
+
+type ConsumerResponse {
+  id: Int!
+  consumer_public_id: String!
+  company_name: String
+  contact_person: String!
+  email: String!
+  phone_no: String!
+  location: String
+  status: String!
+  created_at: DateTime!
+}
+
+type FinanceOverview {
+  total_income: Float!
+  total_expense: Float!
+  balance: Float!
+  pending_income: Float!
+  pending_expense: Float!
+}
+
+type Query {
+  """Get current user profile"""
+  me: UserMain!
+
+  """Get user by public ID"""
+  getUserByPublicId(public_id: String!): UserMain!
+  customers: [Customer!]!
+  customer(id: String!): Customer!
+  invoices: [InvoiceType!]!
+  getInvoices: [InvoiceType!]!
+  invoice(id: Int!): InvoiceType!
+  getInvoiceByNumber(invoice_number: String!): InvoiceType!
+  getInventory: [InventoryMaster!]!
+  getInventoryById(inventory_id: String!): InventoryMaster!
+  getMyRelationshipRequests: [RelationshipRequest!]!
+  getPendingRequests: [RelationshipRequest!]!
+  getSentRequests: [RelationshipRequest!]!
+  getSuppliers: [SupplierResponse!]!
+  getConsumers: [ConsumerResponse!]!
+  searchUser(input: SearchUserInput!): UserMain!
+  dashboardStats: DashboardStatsType!
+  invoiceCharts: InvoiceChartData!
+  getFinanceDashboard: FinanceOverview!
+  chatRoomMessages(roomId: String!): [ChatMessageType!]!
+  userChatRooms: [ChatRoomType!]!
+
+  """
+  Search products using natural language. Returns products ranked by relevance.
+  """
+  semanticSearch(input: SemanticSearchInput!): [SemanticSearchResult!]!
+
+  """Get personalized product recommendations based on purchase history."""
+  getRecommendations(input: RecommendationInput!): [ProductRecommendation!]!
+
+  """
+  Ask questions about your database using natural language. AI will query the database and provide answers.
+  """
+  queryWithRag(input: RagQueryInput!): RagResponse!
+
+  """Export data to CSV or Excel format with optional filters."""
+  exportData(input: DataExportInput!): DataExportResult!
+
+  """Detect anomalies in sales patterns, revenue, and order quantities."""
+  detectAnomalies: [AnomalyDetectionResult!]!
+
+  """Get summary of available data for RAG queries."""
+  getRagDataSummary: String!
+}
+
+input SearchUserInput {
+  public_id: String
+  email: String
+  phone_no: String
+}
+
+input SemanticSearchInput {
+  query: String!
+  limit: Int! = 10
+}
+
+input RecommendationInput {
+  userId: String!
+  limit: Int! = 5
+}
+
+input RagQueryInput {
+  query: String!
+  context: String
+}
+
+input DataExportInput {
+  dataType: String!
+  format: String!
+  dateFrom: DateTime
+  dateTo: DateTime
+  fields: [String!]
+}
+
+type Mutation {
+  """Login with email or phone number and password"""
+  login(input: LoginInput!): LoginResponse!
+
+  """Register a new user and send OTP for verification"""
+  signup(input: SignupInput!): SignupResponse!
+
+  """Verify OTP for signup or password reset"""
+  verifyOtp(input: VerifyOtpInput!): OtpResponse!
+
+  """Request password reset OTP"""
+  forgotPassword(input: ForgotPasswordInput!): OtpResponse!
+
+  """Resend OTP for signup or password reset"""
+  resendOtp(input: ResendOtpInput!): OtpResponse!
+
+  """Reset password with OTP"""
+  resetPassword(input: ResetPasswordInput!): OtpResponse!
+
+  """Logout and invalidate token"""
+  logout: LogoutResponse!
+
+  """Update user profile"""
+  updateProfile(input: UpdateProfileInput!): UserMain!
+  createCustomer(input: CreateCustomerInput!): Customer!
+  updateCustomer(id: String!, input: UpdateCustomerInput!): Customer!
+  deleteCustomer(id: String!): Boolean!
+  createInvoice(input: CreateInvoiceInput!): InvoiceType!
+  updateInvoiceStatus(input: UpdateInvoiceStatusInput!): InvoiceType!
+  updateInvoice(invoice_number: String!, input: UpdateInvoiceInput!): InvoiceType!
+  deleteInvoice(invoice_number: String!): InvoiceType!
+  createInventory(input: CreateInventoryInput!): InventoryMaster!
+  updateInventory(inventory_id: String!, input: UpdateInventoryInput!): InventoryMaster!
+  deleteInventory(inventory_id: String!): MessageResponse!
+  sendRelationshipRequest(input: SendRelationshipRequestInput!): RelationshipRequest!
+  acceptRejectRequest(input: AcceptRejectRequestInput!): RelationshipRequest!
+  removeRelationship(request_id: String!): MessageResponse!
+  createChatRoom(input: CreateRoomInput!): ChatRoomType!
+  joinChatRoom(input: JoinRoomInput!): ChatRoomType!
+  sendChatMessage(input: SendMessageInput!): ChatMessageType!
+  getOrCreatePrivateChatRoom(receiverId: String!): ChatRoomType!
+
+  """Generate AI-powered summary for a product."""
+  generateProductSummary(input: GenerateSummaryInput!): ProductSummary!
+
+  """Index all products for semantic search. Run after adding new products."""
+  indexAllProducts: Boolean!
+
+  """Generate AI-powered summaries for all products missing descriptions."""
+  generateMissingSummaries: CsvUploadResult!
+}
+
+input LoginInput {
+  email: String
+  phone_no: String
+  password: String!
+}
+
+input SignupInput {
+  company_name: String
+  contact_person: String!
+  email: String!
+  phone_no: String!
+  address: String
+  gender: String
+  type_of_business: String
+  role: String!
+  password: String!
+}
+
+input VerifyOtpInput {
+  email: String!
+  otp: String!
+  purpose: String!
+}
+
+input ForgotPasswordInput {
+  email: String!
+}
+
+input ResendOtpInput {
+  email: String!
+  purpose: String!
+}
+
+input ResetPasswordInput {
+  email: String!
+  otp: String!
+  new_password: String!
+}
+
+input UpdateProfileInput {
+  company_name: String
+  contact_person: String
+  phone_no: String
+  address: String
+  gender: String
+  type_of_business: String
+  status: String
+}
+
+input CreateCustomerInput {
+  name: String!
+  email: String
+  phone: String
+  address: String
+}
+
+input UpdateCustomerInput {
+  name: String
+  email: String
+  phone: String
+  address: String
+}
+
+input CreateInvoiceInput {
+  bill_to_public_id: String
+  bill_to_email: String
+  bill_to_phone: String
+  items: [InvoiceItemInput!]!
+  notes: String
+}
+
+input InvoiceItemInput {
+  inventory_id: String!
+  qty: Float!
+  rate: Float!
+  discount_percentage: Float
+}
+
+input UpdateInvoiceStatusInput {
+  invoice_number: String!
+  status: String!
+}
+
+input UpdateInvoiceInput {
+  notes: String
+  items: [InvoiceItemInput!]
+}
+
+input CreateInventoryInput {
+  name: String!
+  description: String!
+  quantity: Int!
+  unit_price: Float!
+  sku: String
+  images: [String!]
+}
+
+input UpdateInventoryInput {
+  name: String
+  description: String
+  quantity: Int
+  unit_price: Float
+  sku: String
+  images: [String!]
+}
+
+input SendRelationshipRequestInput {
+  requested_public_id: String!
+  relationship_type: String!
+}
+
+input AcceptRejectRequestInput {
+  request_id: String!
+  action: String!
+}
+
+input CreateRoomInput {
+  name: String!
+  participantIds: [String!]
+}
+
+input JoinRoomInput {
+  roomId: String!
+}
+
+input SendMessageInput {
+  roomId: String!
+  receiverId: String
+  message: String!
+}
+
+input GenerateSummaryInput {
+  productId: String!
+}
+
+type Subscription {
+  invoiceReceived: InvoiceType!
+  dashboardStatsUpdated: DashboardStatsType!
+  financeDashboardUpdated: FinanceDashboard!
+  messageReceived(roomId: String!): ChatMessageType!
+  userJoinedRoom: UserJoinedRoomType!
+}

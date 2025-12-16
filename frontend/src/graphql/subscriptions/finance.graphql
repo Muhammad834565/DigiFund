@@ -1,0 +1,33 @@
+subscription FinanceDashboardUpdates {
+  financeDashboardUpdated {
+    total_income
+    total_expense
+    balance
+    transactions {
+      date
+      invoice_number
+      description
+      category
+      amount
+      type
+    }
+    charts {
+      sales_by_item {
+        item_name
+        total_amount
+      }
+      monthly_sales {
+        month
+        total_amount
+      }
+      weekly_sales {
+        day
+        total_amount
+      }
+      monthly_sales_count {
+        month
+        count
+      }
+    }
+  }
+}

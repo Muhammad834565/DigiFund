@@ -1,0 +1,12 @@
+# Chat Subscriptions
+
+subscription MessageReceived($roomId: String!) {
+  messageReceived(roomId: $roomId) {
+    id
+    roomId
+    senderId
+    receiverId
+    message
+    createdAt
+  }
+}

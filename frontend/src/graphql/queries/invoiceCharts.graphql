@@ -1,0 +1,9 @@
+query GetInvoiceCharts {
+  invoiceCharts {
+    last7Days {
+      date
+      count
+      totalAmount
+    }
+  }
+}

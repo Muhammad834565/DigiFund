@@ -1,0 +1,238 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.InvoiceStatus = exports.InvoiceType = exports.InvoiceItem = exports.InvoiceMaster = void 0;
+const graphql_1 = require("@nestjs/graphql");
+const typeorm_1 = require("typeorm");
+const user_main_entity_1 = require("./user-main.entity");
+let InvoiceMaster = class InvoiceMaster {
+    id;
+    invoice_number;
+    invoice_type;
+    status;
+    bill_from_public_id;
+    bill_to_public_id;
+    bill_from_status;
+    bill_to_status;
+    invoice_date;
+    total_amount;
+    bill_to_name;
+    bill_to_address;
+    bill_to_email;
+    bill_to_phone;
+    bill_from_name;
+    bill_from_address;
+    bill_from_email;
+    bill_from_phone;
+    created_at;
+    updated_at;
+    items;
+    billFromUser;
+    billToUser;
+};
+exports.InvoiceMaster = InvoiceMaster;
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int),
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
+], InvoiceMaster.prototype, "id", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    (0, typeorm_1.Column)({ unique: true, length: 20 }),
+    (0, typeorm_1.Index)(),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "invoice_number", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    (0, typeorm_1.Column)({ length: 20 }),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "invoice_type", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    (0, typeorm_1.Column)({ default: 'pending', length: 20 }),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "status", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    (0, typeorm_1.Column)({ length: 20 }),
+    (0, typeorm_1.Index)(),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "bill_from_public_id", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    (0, typeorm_1.Column)({ length: 20 }),
+    (0, typeorm_1.Index)(),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "bill_to_public_id", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    (0, typeorm_1.Column)({ default: 'waiting', length: 20 }),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "bill_from_status", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    (0, typeorm_1.Column)({ default: 'pending', length: 20 }),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "bill_to_status", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    (0, typeorm_1.Column)({ type: 'timestamp' }),
+    __metadata("design:type", Date)
+], InvoiceMaster.prototype, "invoice_date", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Float),
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 15, scale: 2 }),
+    __metadata("design:type", Number)
+], InvoiceMaster.prototype, "total_amount", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "bill_to_name", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "bill_to_address", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "bill_to_email", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, typeorm_1.Column)({ nullable: true, length: 20 }),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "bill_to_phone", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "bill_from_name", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "bill_from_address", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "bill_from_email", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, typeorm_1.Column)({ nullable: true, length: 20 }),
+    __metadata("design:type", String)
+], InvoiceMaster.prototype, "bill_from_phone", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], InvoiceMaster.prototype, "created_at", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], InvoiceMaster.prototype, "updated_at", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [InvoiceItem], { nullable: true }),
+    (0, typeorm_1.OneToMany)(() => InvoiceItem, (item) => item.invoice, { cascade: true }),
+    __metadata("design:type", Array)
+], InvoiceMaster.prototype, "items", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => user_main_entity_1.UserMain),
+    (0, typeorm_1.JoinColumn)({
+        name: 'bill_from_public_id',
+        referencedColumnName: 'public_id',
+    }),
+    __metadata("design:type", user_main_entity_1.UserMain)
+], InvoiceMaster.prototype, "billFromUser", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => user_main_entity_1.UserMain),
+    (0, typeorm_1.JoinColumn)({ name: 'bill_to_public_id', referencedColumnName: 'public_id' }),
+    __metadata("design:type", user_main_entity_1.UserMain)
+], InvoiceMaster.prototype, "billToUser", void 0);
+exports.InvoiceMaster = InvoiceMaster = __decorate([
+    (0, graphql_1.ObjectType)(),
+    (0, typeorm_1.Entity)('invoices_master')
+], InvoiceMaster);
+let InvoiceItem = class InvoiceItem {
+    id;
+    invoice_id;
+    inventory_id;
+    qty;
+    rate;
+    discount_percentage;
+    total_price;
+    invoice;
+};
+exports.InvoiceItem = InvoiceItem;
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int),
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
+], InvoiceItem.prototype, "id", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int),
+    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Index)(),
+    __metadata("design:type", Number)
+], InvoiceItem.prototype, "invoice_id", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    (0, typeorm_1.Column)({ length: 50 }),
+    (0, typeorm_1.Index)(),
+    __metadata("design:type", String)
+], InvoiceItem.prototype, "inventory_id", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Float),
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 15, scale: 2 }),
+    __metadata("design:type", Number)
+], InvoiceItem.prototype, "qty", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Float),
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 15, scale: 2 }),
+    __metadata("design:type", Number)
+], InvoiceItem.prototype, "rate", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Float),
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 15, scale: 2, default: 0 }),
+    __metadata("design:type", Number)
+], InvoiceItem.prototype, "discount_percentage", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Float),
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 15, scale: 2 }),
+    __metadata("design:type", Number)
+], InvoiceItem.prototype, "total_price", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => InvoiceMaster, (invoice) => invoice.items, {
+        onDelete: 'CASCADE',
+    }),
+    (0, typeorm_1.JoinColumn)({ name: 'invoice_id' }),
+    __metadata("design:type", InvoiceMaster)
+], InvoiceItem.prototype, "invoice", void 0);
+exports.InvoiceItem = InvoiceItem = __decorate([
+    (0, graphql_1.ObjectType)(),
+    (0, typeorm_1.Entity)('invoice_items')
+], InvoiceItem);
+var InvoiceType;
+(function (InvoiceType) {
+    InvoiceType["INCOME"] = "income";
+    InvoiceType["EXPENSE"] = "expense";
+})(InvoiceType || (exports.InvoiceType = InvoiceType = {}));
+var InvoiceStatus;
+(function (InvoiceStatus) {
+    InvoiceStatus["PENDING"] = "pending";
+    InvoiceStatus["APPROVED"] = "approved";
+    InvoiceStatus["DECLINED"] = "declined";
+    InvoiceStatus["PAID"] = "paid";
+})(InvoiceStatus || (exports.InvoiceStatus = InvoiceStatus = {}));
+//# sourceMappingURL=invoice-master.entity.js.map
