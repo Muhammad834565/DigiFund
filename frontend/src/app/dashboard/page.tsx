@@ -10,9 +10,9 @@ import {
   TrendingUp,
   BarChart3,
 } from "lucide-react";
-import { useState, useTransition, useMemo, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { LoadingOverlay, LoadingSpinner } from "@/components/LoadingSpinner";
+import { useMemo, useEffect } from "react";
+import Link from "next/link";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 import {
   useGetDashboardStatsQuery,
   useDashboardLiveStatsSubscription,
@@ -32,10 +32,6 @@ import {
 } from "recharts";
 
 export default function DashboardPage() {
-  const [isPending, startTransition] = useTransition();
-  const [activeCard, setActiveCard] = useState<string | null>(null);
-  const router = useRouter();
-
   // Fetch initial dashboard stats
   const { data, loading, error } = useGetDashboardStatsQuery({
     fetchPolicy: "cache-and-network",
@@ -112,15 +108,6 @@ export default function DashboardPage() {
 
     return dailyStats;
   }, [invoicesData]);
-
-  const handleNavigation = (path: string, cardName: string) => {
-    setActiveCard(cardName);
-    startTransition(() => {
-      router.push(path);
-    });
-  };
-
-
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -277,13 +264,10 @@ export default function DashboardPage() {
         </div>
 
         {/* Total Customers */}
-        <div
-          onClick={() => handleNavigation("/dashboard/customers", "customers")}
-          className="group relative p-6 rounded-2xl glass-card hover:bg-white/60 dark:hover:bg-gray-800/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer border border-white/20 dark:border-white/10"
+        <Link
+          href="/dashboard/customers"
+          className="group relative p-6 rounded-2xl glass-card hover:bg-white/60 dark:hover:bg-gray-800/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer border border-white/20 dark:border-white/10 block"
         >
-          {isPending && activeCard === "customers" && (
-            <LoadingOverlay className="rounded-2xl bg-white/50 backdrop-blur-sm" />
-          )}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
           <div className="relative flex items-center justify-between">
             <div>
@@ -296,16 +280,13 @@ export default function DashboardPage() {
               <Users className="w-6 h-6 text-white" />
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* Total Invoices */}
-        <div
-          onClick={() => handleNavigation("/dashboard/invoices", "invoices")}
-          className="group relative p-6 rounded-2xl glass-card hover:bg-white/60 dark:hover:bg-gray-800/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer border border-white/20 dark:border-white/10"
+        <Link
+          href="/dashboard/invoices"
+          className="group relative p-6 rounded-2xl glass-card hover:bg-white/60 dark:hover:bg-gray-800/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer border border-white/20 dark:border-white/10 block"
         >
-          {isPending && activeCard === "invoices" && (
-            <LoadingOverlay className="rounded-2xl bg-white/50 backdrop-blur-sm" />
-          )}
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-violet-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
           <div className="relative flex items-center justify-between">
             <div>
@@ -318,20 +299,17 @@ export default function DashboardPage() {
               <FileText className="w-6 h-6 text-white" />
             </div>
           </div>
-        </div>
+        </Link>
 
-        {/* Total Products */}
-        <div
-          onClick={() => handleNavigation("/dashboard/products", "products")}
-          className="group relative p-6 rounded-2xl glass-card hover:bg-white/60 dark:hover:bg-gray-800/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer border border-white/20 dark:border-white/10"
+        {/* Total inventory */}
+        <Link
+          href="/dashboard/inventory"
+          className="group relative p-6 rounded-2xl glass-card hover:bg-white/60 dark:hover:bg-gray-800/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer border border-white/20 dark:border-white/10 block"
         >
-          {isPending && activeCard === "products" && (
-            <LoadingOverlay className="rounded-2xl bg-white/50 backdrop-blur-sm" />
-          )}
           <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
           <div className="relative flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Total Products</p>
+              <p className="text-sm font-medium text-muted-foreground mb-1">Total Inventory</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 {stats?.totalProducts || 0}
               </p>
@@ -340,7 +318,7 @@ export default function DashboardPage() {
               <ShoppingCart className="w-6 h-6 text-white" />
             </div>
           </div>
-        </div>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -377,15 +355,11 @@ export default function DashboardPage() {
           Quick Actions
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div
-            onClick={() => handleNavigation('/dashboard/customers', 'customers')}
-            className="group relative p-6 rounded-2xl glass-card hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer border border-white/20 dark:border-white/10 overflow-hidden"
+          <Link
+            href="/dashboard/customers"
+            className="group relative p-6 rounded-2xl glass-card hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer border border-white/20 dark:border-white/10 overflow-hidden block"
           >
             <div className="absolute top-0 right-0 p-32 bg-blue-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-500/10 transition-all" />
-
-            {isPending && activeCard === 'customers' && (
-              <LoadingOverlay className="rounded-2xl bg-white/50 backdrop-blur-sm" />
-            )}
 
             <div className="relative">
               <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -401,17 +375,13 @@ export default function DashboardPage() {
                 Open Action →
               </div>
             </div>
-          </div>
+          </Link>
 
-          <div
-            onClick={() => handleNavigation('/dashboard/invoices', 'invoices')}
-            className="group relative p-6 rounded-2xl glass-card hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer border border-white/20 dark:border-white/10 overflow-hidden"
+          <Link
+            href="/dashboard/invoices/create"
+            className="group relative p-6 rounded-2xl glass-card hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer border border-white/20 dark:border-white/10 overflow-hidden block"
           >
             <div className="absolute top-0 right-0 p-32 bg-green-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-green-500/10 transition-all" />
-
-            {isPending && activeCard === 'invoices' && (
-              <LoadingOverlay className="rounded-2xl bg-white/50 backdrop-blur-sm" />
-            )}
 
             <div className="relative">
               <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -427,24 +397,20 @@ export default function DashboardPage() {
                 Open Action →
               </div>
             </div>
-          </div>
+          </Link>
 
-          <div
-            onClick={() => handleNavigation('/dashboard/products', 'products')}
-            className="group relative p-6 rounded-2xl glass-card hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer border border-white/20 dark:border-white/10 overflow-hidden"
+          <Link
+            href="/dashboard/inventory"
+            className="group relative p-6 rounded-2xl glass-card hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer border border-white/20 dark:border-white/10 overflow-hidden block"
           >
             <div className="absolute top-0 right-0 p-32 bg-purple-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-purple-500/10 transition-all" />
-
-            {isPending && activeCard === 'products' && (
-              <LoadingOverlay className="rounded-2xl bg-white/50 backdrop-blur-sm" />
-            )}
 
             <div className="relative">
               <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                 <ShoppingCart className="w-6 h-6 text-purple-600 dark:text-purple-400" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-purple-500 transition-colors">
-                View Products
+                View Inventory
               </h3>
               <p className="text-muted-foreground text-sm">
                 Manage inventory items
@@ -453,7 +419,7 @@ export default function DashboardPage() {
                 Open Action →
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
 
