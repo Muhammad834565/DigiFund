@@ -1,11 +1,12 @@
 // lib/apollo-client.ts
-import { ApolloClient, InMemoryCache, HttpLink, split } from "@apollo/client";
-import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-import { createClient } from "graphql-ws";
+import { ApolloClient, InMemoryCache, HttpLink, split, ApolloLink, Operation, FetchResult, Observable } from "@apollo/client";
+// import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+// import { createClient } from "graphql-ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { setContext } from "@apollo/client/link/context";
 import Cookies from "js-cookie";
 import { onError } from "@apollo/client/link/error";
+import { SubscriptionClient } from "subscriptions-transport-ws";
 
 // Define your endpoints
 const httpLink = new HttpLink({
@@ -66,29 +67,84 @@ const errorLink = onError(({ graphQLErrors, networkError }: any) => {
   }
 });
 
+// Adapter for Legacy Subscriptions (subscriptions-transport-ws) in Apollo Client v4
+class LegacyWebSocketLink extends ApolloLink {
+  private client: SubscriptionClient;
+
+  constructor(client: SubscriptionClient) {
+    super();
+    this.client = client;
+  }
+
+  public request(operation: Operation): Observable<FetchResult> | null {
+    return new Observable((sink) => {
+      const source = this.client.request(operation as any);
+      // @ts-ignore - Observables are compatible but types might mismatch slightly
+      return source.subscribe(sink);
+    });
+  }
+}
+
 // 1. WebSocket Link (for Subscriptions) - only in browser
-let wsLink: GraphQLWsLink | null = null;
+let wsLink: ApolloLink | null = null;
+
 if (typeof window !== "undefined") {
   try {
-    wsLink = new GraphQLWsLink(
-      createClient({
-        url:
-          process.env.NEXT_PUBLIC_GRAPHQL_WS_URL ||
-          "ws://localhost:3000/graphql",
+    // START: Legacy Protocol (subscriptions-transport-ws)
+    const legacyClient = new SubscriptionClient(
+      process.env.NEXT_PUBLIC_GRAPHQL_WS_URL || "ws://localhost:3000/graphql",
+      {
+        reconnect: true,
+        timeout: 30000,
         connectionParams: () => {
+          const token = Cookies.get("client_token");
+          console.log("🔌 Legacy WS (subscriptions-transport-ws) Connecting. Token present:", !!token);
           return {
-            authToken: Cookies.get("token"),
+            authToken: token,
+            Authorization: token ? `Bearer ${token}` : undefined,
+            headers: {
+              Authorization: token ? `Bearer ${token}` : undefined,
+            },
           };
         },
-        retryAttempts: 3,
+        connectionCallback: (error) => {
+          if (error) {
+            console.warn("⚠️ Legacy WS Connection Error:", error);
+          } else {
+            console.log("✅ Legacy WS Connected!");
+          }
+        }
+      }
+    );
+    wsLink = new LegacyWebSocketLink(legacyClient);
+    // END: Legacy Protocol
+
+    /* 
+    // START: Modern Protocol (graphql-ws) - Commented out
+    wsLink = new GraphQLWsLink(
+      createClient({
+        url: process.env.NEXT_PUBLIC_GRAPHQL_WS_URL || "ws://localhost:3000/graphql",
+        connectionParams: () => {
+          const token = Cookies.get("client_token");
+          console.log("🔌 Modern WS Connecting. Token present:", !!token);
+          return {
+            authToken: token,
+            Authorization: token ? `Bearer ${token}` : undefined,
+            headers: { Authorization: token ? `Bearer ${token}` : undefined },
+          };
+        },
+        retryAttempts: 5,
         shouldRetry: () => true,
         on: {
-          error: (error) => {
-            console.warn("WebSocket error:", error);
-          },
+          connected: () => console.log("✅ Modern WS Connected"),
+          closed: (e) => console.log("❌ Modern WS Closed", e),
+          error: (error) => console.warn("⚠️ Modern WS Error:", error),
         },
       })
     );
+    // END: Modern Protocol
+    */
+
   } catch (error) {
     console.warn("Failed to create WebSocket link:", error);
   }
@@ -100,9 +156,7 @@ const authLink = setContext((_, { headers }) => {
   const token = Cookies.get("client_token");
 
   if (token) {
-    console.log("🔐 Apollo Client: Token found, adding Authorization header");
-  } else {
-    console.warn("⚠️ Apollo Client: No token found in cookies");
+    // console.log("🔐 Apollo Client: Token found, adding Authorization header");
   }
 
   return {

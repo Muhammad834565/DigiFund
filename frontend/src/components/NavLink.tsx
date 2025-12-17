@@ -35,30 +35,22 @@ export function NavLink({
     <Link
       href={href}
       onClick={handleClick}
-      className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors relative"
-      style={{
-        backgroundColor: isActive ? "#C0392B" : "transparent",
-        color: "#ffffff",
-        cursor: "pointer",
-      }}
-      onMouseOver={(e) => {
-        if (!isActive) {
-          e.currentTarget.style.backgroundColor = "#C0392B";
-        }
-      }}
-      onMouseOut={(e) => {
-        if (!isActive) {
-          e.currentTarget.style.backgroundColor = "transparent";
-        }
-      }}
+      className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all relative text-white group
+        ${isActive ? "bg-[#C0392B] shadow-md shadow-red-900/20" : "hover:bg-white/10 hover:translate-x-1"}
+      `}
     >
       {isPending && (
-        <div className="absolute right-2">
+        <div className="absolute right-2 animate-spin">
           <LoadingSpinner size="sm" />
         </div>
       )}
-      <span className="text-lg">{icon}</span>
+      <span className={`text-lg transition-transform duration-300 ${isActive ? "scale-110" : "group-hover:scale-110"}`}>{icon}</span>
       <span>{label}</span>
+
+      {/* Active Indicator Strip */}
+      {isActive && (
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-white rounded-r-full" />
+      )}
     </Link>
   );
 }
