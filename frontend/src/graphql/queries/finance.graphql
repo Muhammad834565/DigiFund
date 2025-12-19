@@ -3,6 +3,8 @@ query GetFinanceDashboard {
     total_income
     total_expense
     balance
+    pending_income
+    pending_expense
 #    transactions {
 #      date
 #      invoice_number

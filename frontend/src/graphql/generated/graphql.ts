@@ -1091,7 +1091,7 @@ export type ExportInvoicesExcelQuery = { __typename?: 'Query', exportData: { __t
 export type GetFinanceDashboardQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetFinanceDashboardQuery = { __typename?: 'Query', getFinanceDashboard: { __typename?: 'FinanceOverview', total_income: number, total_expense: number, balance: number } };
+export type GetFinanceDashboardQuery = { __typename?: 'Query', getFinanceDashboard: { __typename?: 'FinanceOverview', total_income: number, total_expense: number, balance: number, pending_income: number, pending_expense: number } };
 
 export type GetMyInventoryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2125,6 +2125,8 @@ export const GetFinanceDashboardDocument = gql`
     total_income
     total_expense
     balance
+    pending_income
+    pending_expense
   }
 }
     `;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetAllCustomersQuery, useCreateCustomerMutation, useUpdateCustomerMutation, useDeleteCustomerMutation, GetAllCustomersDocument } from "@/graphql/generated/graphql";
+import { useGetAllCustomersQuery, useCreateCustomerMutation, useUpdateCustomerMutation, useDeleteCustomerMutation, GetAllCustomersDocument, GetAllCustomersQuery } from "@/graphql/generated/graphql";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -19,8 +19,8 @@ export default function CustomersPage() {
   const [deleteCustomer] = useDeleteCustomerMutation();
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<any>(null);
-  const [viewingItem, setViewingItem] = useState<any>(null);
+  const [editingItem, setEditingItem] = useState<GetAllCustomersQuery['customers'][number] | null>(null);
+  const [viewingItem, setViewingItem] = useState<GetAllCustomersQuery['customers'][number] | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -42,8 +42,9 @@ export default function CustomersPage() {
       toast.success("Customer created successfully");
       setIsCreateOpen(false);
       setFormData({ name: "", email: "", phone: "", address: "" });
-    } catch (err: any) {
-      toast.error("Failed to create customer: " + err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      toast.error("Failed to create customer: " + errorMessage);
     }
   };
 
@@ -61,8 +62,9 @@ export default function CustomersPage() {
       toast.success("Customer updated successfully");
       setEditingItem(null);
       setFormData({ name: "", email: "", phone: "", address: "" });
-    } catch (err: any) {
-      toast.error("Failed to update customer: " + err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      toast.error("Failed to update customer: " + errorMessage);
     }
   };
 
@@ -74,18 +76,19 @@ export default function CustomersPage() {
         refetchQueries: [{ query: GetAllCustomersDocument }]
       });
       toast.success("Customer deleted");
-    } catch (err: any) {
-      toast.error("Failed to delete: " + err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      toast.error("Failed to delete: " + errorMessage);
     }
   };
 
-  const openEdit = (item: any) => {
+  const openEdit = (item: GetAllCustomersQuery['customers'][number]) => {
     setEditingItem(item);
     setFormData({
-      name: item.name,
-      email: item.email,
-      phone: item.phone,
-      address: item.address
+      name: item.name || "",
+      email: item.email || "",
+      phone: item.phone || "",
+      address: item.address || ""
     });
   };
 
@@ -182,7 +185,7 @@ export default function CustomersPage() {
               {customers.length === 0 ? (
                 <TableRow><TableCell colSpan={5} className="text-center h-24 text-muted-foreground">No customers found.</TableCell></TableRow>
               ) : (
-                customers.map((customer) => (
+                customers.map((customer: GetAllCustomersQuery['customers'][number]) => (
                   <TableRow key={customer?.id}>
                     <TableCell className="font-medium">
                       <Button

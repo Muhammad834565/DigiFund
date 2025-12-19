@@ -77,10 +77,10 @@ class LegacyWebSocketLink extends ApolloLink {
   }
 
   public request(operation: Operation): Observable<FetchResult> | null {
-    return new Observable((sink) => {
+    return new Observable<FetchResult>((sink: any) => {
       const source = this.client.request(operation as any);
-      // @ts-ignore - Observables are compatible but types might mismatch slightly
-      return source.subscribe(sink);
+      const sub = source.subscribe(sink);
+      return () => sub.unsubscribe();
     });
   }
 }

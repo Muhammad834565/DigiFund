@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetMySuppliersQuery, useGetMyRequestsQuery, useSendSupplierRequestMutation, useAcceptRequestMutation, useSearchUserQuery } from "@/graphql/generated/graphql";
+import { useGetMySuppliersQuery, useGetMyRequestsQuery, useSendSupplierRequestMutation, useAcceptRequestMutation, useSearchUserQuery, GetMySuppliersQuery, GetMyRequestsQuery, SearchUserQuery } from "@/graphql/generated/graphql";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -56,8 +56,9 @@ export default function SuppliersPage() {
         }
       });
       toast.success("Connection request sent!");
-    } catch (err: any) {
-      toast.error("Failed to send request: " + err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      toast.error("Failed to send request: " + errorMessage);
     }
   };
 
@@ -67,8 +68,9 @@ export default function SuppliersPage() {
         variables: { input: { request_id: requestId, action: "accepted" } }
       });
       toast.success("Request accepted");
-    } catch (err: any) {
-      toast.error("Failed to accept: " + err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      toast.error("Failed to accept: " + errorMessage);
     }
   };
 
@@ -131,7 +133,7 @@ export default function SuppliersPage() {
                   {suppliersData?.getSuppliers?.length === 0 ? (
                     <TableRow><TableCell colSpan={6} className="text-center h-24">No suppliers found.</TableCell></TableRow>
                   ) : (
-                    suppliersData?.getSuppliers?.map((supplier) => (
+                    suppliersData?.getSuppliers?.map((supplier: GetMySuppliersQuery['getSuppliers'][number]) => (
                       <TableRow key={supplier?.id}>
                         <TableCell>
                           <Link
@@ -169,7 +171,7 @@ export default function SuppliersPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {requestsData?.getMyRelationshipRequests?.map(req => (
+                  {requestsData?.getMyRelationshipRequests?.map((req: GetMyRequestsQuery['getMyRelationshipRequests'][number]) => (
                     <TableRow key={req?.id}>
                       <TableCell>
                         <Link

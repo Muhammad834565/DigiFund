@@ -83,7 +83,6 @@ export default function ChatComponent({
       // Create or get private chat room
       const result = await getOrCreateRoom({
         variables: {
-          senderId: userId,
           receiverId: customerId,
         },
       });
@@ -143,7 +142,6 @@ export default function ChatComponent({
         variables: {
           input: {
             roomId,
-            senderId: userId,
             receiverId: customerId,
             message: message.trim(),
           },
@@ -369,11 +367,10 @@ export default function ChatComponent({
                   className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[70%] rounded-lg px-3 py-2 ${
-                      isCurrentUser
+                    className={`max-w-[70%] rounded-lg px-3 py-2 ${isCurrentUser
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted"
-                    }`}
+                      }`}
                   >
                     <p className="text-sm whitespace-pre-wrap wrap-break-word">
                       {msg.message}

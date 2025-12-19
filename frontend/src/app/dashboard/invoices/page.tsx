@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetMyInvoicesQuery, useInvoiceReceivedSubscription, GetMyInvoicesDocument, useGetMyProfileQuery } from "@/graphql/generated/graphql";
+import { useGetMyInvoicesQuery, useInvoiceReceivedSubscription, GetMyInvoicesDocument, useGetMyProfileQuery, GetMyInvoicesQuery } from "@/graphql/generated/graphql";
 import { updateInvoiceStatusAction } from "@/app/actions/invoice";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -48,15 +48,16 @@ export default function InvoicesPage() {
         toast.success("Invoice marked as paid");
         refetch(); // Refetch the invoices to update the UI
       }
-    } catch (err: any) {
-      toast.error(err.message || "Failed to update invoice");
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      toast.error(errorMessage || "Failed to update invoice");
     }
   };
 
   const invoices = data?.getInvoices || [];
   const myPublicId = profileData?.me?.public_id;
 
-  const filterByStatus = (inv: any) => {
+  const filterByStatus = (inv: GetMyInvoicesQuery['getInvoices'][number]) => {
     if (statusFilter === "ALL") return true;
     return inv.status?.toUpperCase() === statusFilter;
   };
@@ -69,6 +70,7 @@ export default function InvoicesPage() {
     onData: ({ client, data: subscriptionData }) => {
       const newInvoice = subscriptionData?.data?.invoiceReceived;
       if (!newInvoice) return;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       client.cache.updateQuery({ query: GetMyInvoicesDocument }, (existingData: any) => {
         if (existingData?.getInvoices && newInvoice) {
           return {
@@ -81,7 +83,7 @@ export default function InvoicesPage() {
     },
   });
 
-  const InvoiceTable = ({ invoiceList, isReceived }: { invoiceList: any[], isReceived: boolean }) => (
+  const InvoiceTable = ({ invoiceList, isReceived }: { invoiceList: GetMyInvoicesQuery['getInvoices'], isReceived: boolean }) => (
     <div className="border dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm overflow-hidden">
       <Table>
         <TableHeader>

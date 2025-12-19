@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} suppressHydrationWarning>
       <div className={styles.wrapper}>
         {/* Left side - Logo */}
         <div className={styles.leftPanel}>

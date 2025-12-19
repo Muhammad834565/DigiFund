@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Separator } from "@/components/ui/separator";
 
 export default function ProfilePage() {
   const { data, loading, error, refetch } = useGetMyProfileQuery();

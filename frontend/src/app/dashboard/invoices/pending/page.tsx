@@ -1,16 +1,14 @@
 "use client";
 
-import { useQuery, useMutation } from "@apollo/client";
-import { GET_MY_INVOICES } from "@/graphql/queries/invoices";
-import { UPDATE_INVOICE_STATUS } from "@/graphql/mutations/invoices";
+import { useGetMyInvoicesQuery, useUpdateInvoiceStatusMutation } from "@/graphql/generated/graphql";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 export default function PendingInvoicesPage() {
-  const { data, loading, error, refetch } = useQuery(GET_MY_INVOICES);
-  const [updateStatus] = useMutation(UPDATE_INVOICE_STATUS);
+  const { data, loading, error, refetch } = useGetMyInvoicesQuery();
+  const [updateStatus] = useUpdateInvoiceStatusMutation();
 
   if (loading) return <LoadingSpinner />;
   if (error) return <p>Error: {error.message}</p>;
@@ -22,7 +20,7 @@ export default function PendingInvoicesPage() {
   const handleStatusUpdate = async (invoiceNumber: string, status: string) => {
     try {
       await updateStatus({
-        variables: { invoice_number: invoiceNumber, status },
+        variables: { input: { invoice_number: invoiceNumber, status } },
       });
       refetch();
     } catch (err) {
