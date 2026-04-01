@@ -4,7 +4,6 @@ import { fetchGraphQL } from "@/lib/graphql";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-
 export async function createInventory(prevState: any, formData: FormData) {
   const data = {
     name: formData.get("name") as string,
@@ -12,7 +11,12 @@ export async function createInventory(prevState: any, formData: FormData) {
     quantity: parseInt(formData.get("quantity") as string),
     unit_price: parseFloat(formData.get("unit_price") as string),
     sku: formData.get("sku") as string,
-    images: (formData.get("images") as string)?.split(",").map((s) => s.trim()).filter(Boolean) || [],
+    images:
+      (formData.get("images") as string)
+        ?.split(",")
+        .map((s) => s.trim())
+        .filter(Boolean) || [],
+    image_url: (formData.get("image_url") as string) || undefined,
   };
 
   const mutation = `
@@ -26,6 +30,7 @@ export async function createInventory(prevState: any, formData: FormData) {
         unit_price
         price
         sku
+        image_url
         created_at
       }
     }
@@ -51,7 +56,11 @@ export async function createInventory(prevState: any, formData: FormData) {
     }
 
     revalidatePath("/dashboard/inventory");
-    redirect("/dashboard/inventory?success=created&description=" + encodeURIComponent(data.name) + "&indexed=true");
+    redirect(
+      "/dashboard/inventory?success=created&description=" +
+        encodeURIComponent(data.name) +
+        "&indexed=true",
+    );
   } catch (error: any) {
     if (error.message === "NEXT_REDIRECT") throw error;
     return { errors: error.message || "Failed to create inventory" };
@@ -65,7 +74,8 @@ export async function updateInventoryAction(
     description: string;
     quantity: number;
     unit_price: number;
-  }
+    image_url?: string;
+  },
 ) {
   const mutation = `
     mutation UpdateInventory($inventory_id: String!, $input: UpdateInventoryInput!) {
@@ -75,6 +85,7 @@ export async function updateInventoryAction(
         description
         price
         quantity
+        image_url
         updated_at
       }
     }

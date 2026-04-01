@@ -12,6 +12,7 @@ interface Product {
   description: string;
   price: number;
   stock: number;
+  imageUrl?: string;
   similarityScore?: number;
   confidence?: number;
   reason?: string;

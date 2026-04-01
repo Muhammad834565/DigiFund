@@ -23,6 +23,9 @@ export class SemanticSearchResult {
   @Field(() => Int)
   stock: number;
 
+  @Field({ nullable: true })
+  imageUrl?: string;
+
   // Similarity score (0-1, higher = more similar)
   @Field(() => Float)
   similarityScore: number;
@@ -47,6 +50,9 @@ export class ProductRecommendation {
 
   @Field(() => Int)
   stock: number;
+
+  @Field({ nullable: true })
+  imageUrl?: string;
 
   // Confidence score for recommendation
   @Field(() => Float)

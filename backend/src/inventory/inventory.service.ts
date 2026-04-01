@@ -19,7 +19,7 @@ export class InventoryService {
     private inventoryRepository: Repository<InventoryMaster>,
     @InjectRepository(UserMain)
     private userRepository: Repository<UserMain>,
-  ) { }
+  ) {}
 
   /**
    * Upsert: Update if SKU exists, otherwise create new
@@ -40,12 +40,15 @@ export class InventoryService {
     if (inventory) {
       // Update existing
       inventory.name = input.name;
-      inventory.description = input.description;
+      inventory.description = input.description || undefined;
       inventory.quantity = input.quantity;
       inventory.unit_price = input.unit_price;
       inventory.price = input.unit_price * input.quantity; // Calculated
       if (input.images) {
         inventory.images = input.images;
+      }
+      if (input.image_url) {
+        inventory.image_url = input.image_url;
       }
 
       return await this.inventoryRepository.save(inventory);
@@ -87,12 +90,13 @@ export class InventoryService {
       inventory_id: inventoryId,
       owner_public_id: userPublicId,
       name: input.name,
-      description: input.description,
+      description: input.description || undefined,
       price: input.unit_price * input.quantity, // Calculated
       quantity: input.quantity,
       unit_price: input.unit_price,
       sku: input.sku,
       images: input.images,
+      image_url: input.image_url,
     });
 
     return await this.inventoryRepository.save(inventory);
@@ -138,7 +142,7 @@ export class InventoryService {
       inventory.name = input.name;
     }
     if (input.description !== undefined) {
-      inventory.description = input.description;
+      inventory.description = input.description || undefined;
     }
     // Price is always calculated based on qty * unit_price
 
@@ -148,19 +152,18 @@ export class InventoryService {
     if (input.unit_price !== undefined) {
       inventory.unit_price = input.unit_price;
     }
-
-    // Recalculate price if either quantity or unit_price changed (or both)
     if (input.quantity !== undefined || input.unit_price !== undefined) {
-      inventory.price = inventory.quantity * inventory.unit_price;
+      inventory.price = inventory.unit_price * inventory.quantity;
     }
+
     if (input.sku !== undefined) {
-      // Check if new SKU conflicts with existing
-      if (input.sku !== inventory.sku) {
+      // Check if new SKU exists
+      if (input.sku && input.sku !== inventory.sku) {
         const existing = await this.inventoryRepository.findOne({
           where: { sku: input.sku, owner_public_id: userPublicId },
         });
 
-        if (existing && existing.id !== inventory.id) {
+        if (existing) {
           throw new BadRequestException(
             `Inventory item with SKU "${input.sku}" already exists`,
           );
@@ -168,8 +171,13 @@ export class InventoryService {
       }
       inventory.sku = input.sku;
     }
+
     if (input.images !== undefined) {
       inventory.images = input.images;
+    }
+
+    if (input.image_url !== undefined) {
+      inventory.image_url = input.image_url;
     }
 
     return await this.inventoryRepository.save(inventory);
@@ -181,7 +189,11 @@ export class InventoryService {
     return inventory;
   }
 
-  async decreaseStock(inventoryId: string, quantity: number, userPublicId: string) {
+  async decreaseStock(
+    inventoryId: string,
+    quantity: number,
+    userPublicId: string,
+  ) {
     const inventory = await this.findOne(inventoryId, userPublicId);
 
     if (inventory.quantity < quantity) {

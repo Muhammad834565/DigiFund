@@ -7,16 +7,21 @@ mutation CreateInventory($input: CreateInventoryInput!) {
     quantity
     sku
     images
+    image_url
     created_at
   }
 }
 
-mutation UpdateInventory($inventory_id: String!, $input: UpdateInventoryInput!) {
+mutation UpdateInventory(
+  $inventory_id: String!
+  $input: UpdateInventoryInput!
+) {
   updateInventory(inventory_id: $inventory_id, input: $input) {
     inventory_id
     description
     price
     quantity
+    image_url
     updated_at
   }
 }

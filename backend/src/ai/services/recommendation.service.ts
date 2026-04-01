@@ -16,7 +16,7 @@ export class RecommendationService {
     @InjectRepository(ProductEmbedding)
     private embeddingRepository: Repository<ProductEmbedding>,
     private openRouterService: OpenRouterService,
-  ) { }
+  ) {}
 
   /**
    * Get Recommendations for User
@@ -53,6 +53,11 @@ export class RecommendationService {
       description: product.description || 'No description available',
       price: Number(product.unit_price),
       stock: product.quantity,
+      imageUrl:
+        product.image_url ||
+        (product.images && product.images.length > 0
+          ? product.images[0]
+          : undefined),
       confidence: 0.7,
       reason: 'Popular product',
     }));

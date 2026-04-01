@@ -14,10 +14,10 @@ export class CreateInventoryInput {
   @IsString()
   name: string;
 
-  @Field()
-  @IsNotEmpty()
+  @Field({ nullable: true })
+  @IsOptional()
   @IsString()
-  description: string;
+  description?: string;
 
   @Field(() => Int)
   @IsNotEmpty()
@@ -38,6 +38,11 @@ export class CreateInventoryInput {
   @IsOptional()
   @IsArray()
   images?: string[];
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  image_url?: string;
 }
 
 @InputType()
@@ -71,4 +76,9 @@ export class UpdateInventoryInput {
   @IsOptional()
   @IsArray()
   images?: string[];
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  image_url?: string;
 }

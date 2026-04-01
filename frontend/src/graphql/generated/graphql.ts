@@ -75,7 +75,8 @@ export type CreateCustomerInput = {
 };
 
 export type CreateInventoryInput = {
-  description: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  image_url?: InputMaybe<Scalars['String']['input']>;
   images?: InputMaybe<Array<Scalars['String']['input']>>;
   name: Scalars['String']['input'];
   quantity: Scalars['Int']['input'];
@@ -181,8 +182,9 @@ export type GenerateSummaryInput = {
 export type InventoryMaster = {
   __typename?: 'InventoryMaster';
   created_at: Scalars['DateTime']['output'];
-  description: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
+  image_url?: Maybe<Scalars['String']['output']>;
   images?: Maybe<Array<Scalars['String']['output']>>;
   inventory_id: Scalars['String']['output'];
   name: Scalars['String']['output'];
@@ -491,6 +493,7 @@ export type ProductRecommendation = {
   confidence: Scalars['Float']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  imageUrl?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   price: Scalars['Float']['output'];
   reason: Scalars['String']['output'];
@@ -660,6 +663,7 @@ export type SemanticSearchResult = {
   __typename?: 'SemanticSearchResult';
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  imageUrl?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   price: Scalars['Float']['output'];
   similarityScore: Scalars['Float']['output'];
@@ -742,6 +746,7 @@ export type UpdateCustomerInput = {
 
 export type UpdateInventoryInput = {
   description?: InputMaybe<Scalars['String']['input']>;
+  image_url?: InputMaybe<Scalars['String']['input']>;
   images?: InputMaybe<Array<Scalars['String']['input']>>;
   name?: InputMaybe<Scalars['String']['input']>;
   quantity?: InputMaybe<Scalars['Int']['input']>;
@@ -908,7 +913,7 @@ export type CreateInventoryMutationVariables = Exact<{
 }>;
 
 
-export type CreateInventoryMutation = { __typename?: 'Mutation', createInventory: { __typename?: 'InventoryMaster', id: number, inventory_id: string, description: string, price: number, quantity: number, sku?: string | null, images?: Array<string> | null, created_at: any } };
+export type CreateInventoryMutation = { __typename?: 'Mutation', createInventory: { __typename?: 'InventoryMaster', id: number, inventory_id: string, description?: string | null, price: number, quantity: number, sku?: string | null, images?: Array<string> | null, image_url?: string | null, created_at: any } };
 
 export type UpdateInventoryMutationVariables = Exact<{
   inventory_id: Scalars['String']['input'];
@@ -916,7 +921,7 @@ export type UpdateInventoryMutationVariables = Exact<{
 }>;
 
 
-export type UpdateInventoryMutation = { __typename?: 'Mutation', updateInventory: { __typename?: 'InventoryMaster', inventory_id: string, description: string, price: number, quantity: number, updated_at: any } };
+export type UpdateInventoryMutation = { __typename?: 'Mutation', updateInventory: { __typename?: 'InventoryMaster', inventory_id: string, description?: string | null, price: number, quantity: number, image_url?: string | null, updated_at: any } };
 
 export type DeleteInventoryMutationVariables = Exact<{
   inventory_id: Scalars['String']['input'];
@@ -1096,14 +1101,14 @@ export type GetFinanceDashboardQuery = { __typename?: 'Query', getFinanceDashboa
 export type GetMyInventoryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetMyInventoryQuery = { __typename?: 'Query', getInventory: Array<{ __typename?: 'InventoryMaster', id: number, inventory_id: string, name: string, description: string, price: number, quantity: number, unit_price: number, sku?: string | null, images?: Array<string> | null, created_at: any, updated_at: any }> };
+export type GetMyInventoryQuery = { __typename?: 'Query', getInventory: Array<{ __typename?: 'InventoryMaster', id: number, inventory_id: string, name: string, description?: string | null, price: number, quantity: number, unit_price: number, sku?: string | null, images?: Array<string> | null, image_url?: string | null, created_at: any, updated_at: any }> };
 
 export type GetInventoryItemQueryVariables = Exact<{
   inventory_id: Scalars['String']['input'];
 }>;
 
 
-export type GetInventoryItemQuery = { __typename?: 'Query', getInventoryById: { __typename?: 'InventoryMaster', id: number, inventory_id: string, name: string, description: string, price: number, quantity: number, unit_price: number, sku?: string | null, images?: Array<string> | null } };
+export type GetInventoryItemQuery = { __typename?: 'Query', getInventoryById: { __typename?: 'InventoryMaster', id: number, inventory_id: string, name: string, description?: string | null, price: number, quantity: number, unit_price: number, sku?: string | null, images?: Array<string> | null, image_url?: string | null } };
 
 export type GetInvoiceChartsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1458,6 +1463,7 @@ export const CreateInventoryDocument = gql`
     quantity
     sku
     images
+    image_url
     created_at
   }
 }
@@ -1477,6 +1483,7 @@ export const UpdateInventoryDocument = gql`
     description
     price
     quantity
+    image_url
     updated_at
   }
 }
@@ -2158,6 +2165,7 @@ export const GetMyInventoryDocument = gql`
     unit_price
     sku
     images
+    image_url
     created_at
     updated_at
   }
@@ -2191,6 +2199,7 @@ export const GetInventoryItemDocument = gql`
     unit_price
     sku
     images
+    image_url
   }
 }
     `;

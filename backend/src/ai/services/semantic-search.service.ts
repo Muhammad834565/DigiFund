@@ -16,7 +16,7 @@ export class SemanticSearchService {
     @InjectRepository(ProductEmbedding)
     private embeddingRepository: Repository<ProductEmbedding>,
     private openRouterService: OpenRouterService,
-  ) { }
+  ) {}
 
   /**
    * Index Product for Search
@@ -111,6 +111,11 @@ export class SemanticSearchService {
             description: product.description || '',
             price: product.unit_price,
             stock: product.quantity,
+            imageUrl:
+              product.image_url ||
+              (product.images && product.images.length > 0
+                ? product.images[0]
+                : undefined),
             similarityScore: match.similarity,
           });
         }
@@ -176,9 +181,13 @@ export class SemanticSearchService {
       // Support both ID formats if needed
       let product;
       if (!isNaN(Number(productId))) {
-        product = await this.inventoryRepository.findOne({ where: { id: Number(productId) } });
+        product = await this.inventoryRepository.findOne({
+          where: { id: Number(productId) },
+        });
       } else {
-        product = await this.inventoryRepository.findOne({ where: { inventory_id: productId } });
+        product = await this.inventoryRepository.findOne({
+          where: { inventory_id: productId },
+        });
       }
 
       if (!product) {
@@ -221,7 +230,10 @@ export class SemanticSearchService {
    * Uses keyword matching instead of semantic understanding
    */
   private calculateTextSimilarity(query: string, productText: string): number {
-    const queryWords = query.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+    const queryWords = query
+      .toLowerCase()
+      .split(/\s+/)
+      .filter((w) => w.length > 2);
     const productWords = productText.toLowerCase().split(/\s+/);
 
     if (queryWords.length === 0) return 0;
@@ -229,15 +241,15 @@ export class SemanticSearchService {
     let score = 0;
 
     // Exact word matches (highest weight)
-    queryWords.forEach(qWord => {
+    queryWords.forEach((qWord) => {
       if (productWords.includes(qWord)) {
         score += 1.0;
       }
     });
 
     // Partial matches (medium weight)
-    queryWords.forEach(qWord => {
-      productWords.forEach(pWord => {
+    queryWords.forEach((qWord) => {
+      productWords.forEach((pWord) => {
         if (pWord.includes(qWord) || qWord.includes(pWord)) {
           score += 0.5;
         }
@@ -255,7 +267,7 @@ export class SemanticSearchService {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32bit integer
     }
     return Math.abs(hash);

@@ -1,12 +1,35 @@
 "use client";
 
-import { useGetMyInventoryQuery, useDeleteInventoryMutation, useCreateInventoryMutation, useUpdateInventoryMutation, GetMyInventoryDocument, useIndexAllProductsMutation, useGenerateMissingSummariesMutation } from "@/graphql/generated/graphql";
+import {
+  useGetMyInventoryQuery,
+  useDeleteInventoryMutation,
+  useCreateInventoryMutation,
+  useUpdateInventoryMutation,
+  GetMyInventoryDocument,
+  useIndexAllProductsMutation,
+  useGenerateMissingSummariesMutation,
+} from "@/graphql/generated/graphql";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useState } from "react";
@@ -19,7 +42,8 @@ export default function InventoryPage() {
   const [updateInventory] = useUpdateInventoryMutation();
   const [deleteInventory] = useDeleteInventoryMutation();
   const [indexAllProducts] = useIndexAllProductsMutation();
-  const [generateMissingSummaries, { loading: generatingSummaries }] = useGenerateMissingSummariesMutation();
+  const [generateMissingSummaries, { loading: generatingSummaries }] =
+    useGenerateMissingSummariesMutation();
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -33,7 +57,8 @@ export default function InventoryPage() {
     quantity: "",
     unit_price: "",
     sku: "",
-    images: [] as string[]
+    images: [] as string[],
+    image_url: "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,8 +67,11 @@ export default function InventoryPage() {
 
   const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
-      const images = formData.images.length ? formData.images : ["https://placehold.co/100"];
+      const images = formData.images.length
+        ? formData.images
+        : ["https://placehold.co/100"];
       await createInventory({
         variables: {
           input: {
@@ -52,10 +80,11 @@ export default function InventoryPage() {
             quantity: parseInt(formData.quantity.toString()),
             unit_price: parseFloat(formData.unit_price.toString()),
             sku: formData.sku,
-            images: images
-          }
+            images: images,
+            image_url: formData.image_url || undefined,
+          },
         },
-        refetchQueries: [{ query: GetMyInventoryDocument }]
+        refetchQueries: [{ query: GetMyInventoryDocument }],
       });
       toast.success("Item created successfully");
 
@@ -67,7 +96,16 @@ export default function InventoryPage() {
       }
 
       setIsCreateOpen(false);
-      setFormData({ name: "", description: "", price: "", quantity: "", unit_price: "", sku: "", images: [] });
+      setFormData({
+        name: "",
+        description: "",
+        price: "",
+        quantity: "",
+        unit_price: "",
+        sku: "",
+        images: [],
+        image_url: "",
+      });
     } catch (err: any) {
       toast.error("Failed to create item: " + err.message);
     }
@@ -76,6 +114,7 @@ export default function InventoryPage() {
   const handleUpdateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingItem) return;
+
     try {
       await updateInventory({
         variables: {
@@ -85,13 +124,23 @@ export default function InventoryPage() {
             description: formData.description,
             quantity: parseInt(formData.quantity.toString()),
             unit_price: parseFloat(formData.unit_price.toString()),
-          }
+            image_url: formData.image_url || undefined,
+          },
         },
-        refetchQueries: [{ query: GetMyInventoryDocument }]
+        refetchQueries: [{ query: GetMyInventoryDocument }],
       });
       toast.success("Item updated successfully");
       setEditingItem(null);
-      setFormData({ name: "", description: "", price: "", quantity: "", unit_price: "", sku: "", images: [] });
+      setFormData({
+        name: "",
+        description: "",
+        price: "",
+        quantity: "",
+        unit_price: "",
+        sku: "",
+        images: [],
+        image_url: "",
+      });
     } catch (err: any) {
       toast.error("Failed to update item: " + err.message);
     }
@@ -107,7 +156,7 @@ export default function InventoryPage() {
     try {
       await deleteInventory({
         variables: { inventory_id: itemToDelete },
-        refetchQueries: [{ query: GetMyInventoryDocument }]
+        refetchQueries: [{ query: GetMyInventoryDocument }],
       });
       toast.success("Item deleted");
       setIsDeleteOpen(false);
@@ -121,12 +170,13 @@ export default function InventoryPage() {
     setEditingItem(item);
     setFormData({
       name: item.name,
-      description: item.description,
+      description: item.description || "",
       price: item.price.toString(),
       quantity: item.quantity.toString(),
       unit_price: item.unit_price.toString(),
       sku: item.sku,
-      images: item.images || []
+      images: item.images || [],
+      image_url: item.image_url || "",
     });
   };
 
@@ -154,12 +204,18 @@ export default function InventoryPage() {
             }}
             disabled={generatingSummaries}
           >
-            {generatingSummaries ? <LoadingSpinner size="sm" /> : <Sparkles className="mr-2 h-4 w-4" />}
+            {generatingSummaries ? (
+              <LoadingSpinner size="sm" />
+            ) : (
+              <Sparkles className="mr-2 h-4 w-4" />
+            )}
             Generate Summaries
           </Button>
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
             <DialogTrigger asChild>
-              <Button><Plus className="mr-2 h-4 w-4" /> Add Item</Button>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" /> Add Item
+              </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -168,27 +224,65 @@ export default function InventoryPage() {
               <form onSubmit={handleCreateSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label>Name</Label>
-                  <Input name="name" value={formData.name} onChange={handleInputChange} required />
+                  <Input
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Description</Label>
-                  <Input name="description" value={formData.description} onChange={handleInputChange} required />
+                  <Input
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>SKU</Label>
-                    <Input name="sku" value={formData.sku} onChange={handleInputChange} required />
+                    <Input
+                      name="sku"
+                      value={formData.sku}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label>Quantity</Label>
-                    <Input type="number" name="quantity" value={formData.quantity} onChange={handleInputChange} required />
+                    <Input
+                      type="number"
+                      name="quantity"
+                      value={formData.quantity}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label>Unit Price</Label>
-                  <Input type="number" step="0.01" name="unit_price" value={formData.unit_price} onChange={handleInputChange} required />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    name="unit_price"
+                    value={formData.unit_price}
+                    onChange={handleInputChange}
+                    required
+                  />
                 </div>
-                <Button type="submit" className="w-full">Create Item</Button>
+                <div className="space-y-2">
+                  <Label>Primary Image URL</Label>
+                  <Input
+                    name="image_url"
+                    value={formData.image_url}
+                    onChange={handleInputChange}
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
+                <Button type="submit" className="w-full">
+                  Create Item
+                </Button>
               </form>
             </DialogContent>
           </Dialog>
@@ -200,6 +294,7 @@ export default function InventoryPage() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Image</TableHead>
                 <TableHead>SKU</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Description</TableHead>
@@ -211,12 +306,41 @@ export default function InventoryPage() {
             </TableHeader>
             <TableBody>
               {items.length === 0 ? (
-                <TableRow><TableCell colSpan={7} className="text-center h-24 text-muted-foreground">No inventory items found.</TableCell></TableRow>
+                <TableRow>
+                  <TableCell
+                    colSpan={8}
+                    className="text-center h-24 text-muted-foreground"
+                  >
+                    No inventory items found.
+                  </TableCell>
+                </TableRow>
               ) : (
                 items.map((item) => (
                   <TableRow key={item.id}>
+                    <TableCell>
+                      {item.image_url ? (
+                        <div className="w-10 h-10 rounded overflow-hidden bg-muted">
+                          <img
+                            src={item.image_url}
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display =
+                                "none";
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded bg-muted flex items-center justify-center text-xs text-muted-foreground">
+                          No Img
+                        </div>
+                      )}
+                    </TableCell>
                     <TableCell className="font-mono">
-                      <Link href={`/dashboard/inventory/${item.inventory_id}`} className="hover:underline text-blue-600">
+                      <Link
+                        href={`/dashboard/inventory/${item.inventory_id}`}
+                        className="hover:underline text-blue-600"
+                      >
                         {item.sku}
                       </Link>
                     </TableCell>
@@ -226,34 +350,86 @@ export default function InventoryPage() {
                     <TableCell>${item.price?.toFixed(2)}</TableCell>
                     <TableCell>${item.unit_price?.toFixed(2)}</TableCell>
                     <TableCell className="text-right space-x-2">
-                      <Dialog open={!!editingItem && editingItem.id === item.id} onOpenChange={(open) => !open && setEditingItem(null)}>
+                      <Dialog
+                        open={!!editingItem && editingItem.id === item.id}
+                        onOpenChange={(open) => !open && setEditingItem(null)}
+                      >
                         <DialogTrigger asChild>
-                          <Button variant="ghost" size="sm" onClick={() => openEdit(item)}><Edit className="h-4 w-4" /></Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openEdit(item)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
                         </DialogTrigger>
                         <DialogContent>
-                          <DialogHeader><DialogTitle>Edit Inventory</DialogTitle></DialogHeader>
-                          <form onSubmit={handleUpdateSubmit} className="space-y-4">
+                          <DialogHeader>
+                            <DialogTitle>Edit Inventory</DialogTitle>
+                          </DialogHeader>
+                          <form
+                            onSubmit={handleUpdateSubmit}
+                            className="space-y-4"
+                          >
                             <div className="space-y-2">
                               <Label>Name</Label>
-                              <Input name="name" value={formData.name} onChange={handleInputChange} required />
+                              <Input
+                                name="name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                required
+                              />
                             </div>
                             <div className="space-y-2">
                               <Label>Description</Label>
-                              <Input name="description" value={formData.description} onChange={handleInputChange} required />
+                              <Input
+                                name="description"
+                                value={formData.description}
+                                onChange={handleInputChange}
+                              />
                             </div>
                             <div className="space-y-2">
                               <Label>Quantity</Label>
-                              <Input type="number" name="quantity" value={formData.quantity} onChange={handleInputChange} required />
+                              <Input
+                                type="number"
+                                name="quantity"
+                                value={formData.quantity}
+                                onChange={handleInputChange}
+                                required
+                              />
                             </div>
                             <div className="space-y-2">
                               <Label>Unit Price</Label>
-                              <Input type="number" step="0.01" name="unit_price" value={formData.unit_price} onChange={handleInputChange} required />
+                              <Input
+                                type="number"
+                                step="0.01"
+                                name="unit_price"
+                                value={formData.unit_price}
+                                onChange={handleInputChange}
+                                required
+                              />
                             </div>
-                            <Button type="submit" className="w-full">Update Item</Button>
+                            <div className="space-y-2">
+                              <Label>Primary Image URL</Label>
+                              <Input
+                                name="image_url"
+                                value={formData.image_url}
+                                onChange={handleInputChange}
+                                placeholder="https://example.com/image.jpg"
+                              />
+                            </div>
+                            <Button type="submit" className="w-full">
+                              Update Item
+                            </Button>
                           </form>
                         </DialogContent>
                       </Dialog>
-                      <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-700" onClick={() => confirmDelete(item.inventory_id)}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => confirmDelete(item.inventory_id)}
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </TableCell>
@@ -270,12 +446,17 @@ export default function InventoryPage() {
           <DialogHeader>
             <DialogTitle>Delete Inventory Item</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this item? This action cannot be undone.
+              Are you sure you want to delete this item? This action cannot be
+              undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={handleDelete}>Delete</Button>
+            <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              Delete
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

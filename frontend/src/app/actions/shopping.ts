@@ -14,6 +14,7 @@ export async function getRecommendations(userId?: string) {
         stock
         confidence
         reason
+        imageUrl
       }
     }
   `;
@@ -50,6 +51,7 @@ export async function semanticSearch(searchQuery: string) {
         price
         stock
         similarityScore
+        imageUrl
       }
     }
   `;

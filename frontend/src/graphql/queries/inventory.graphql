@@ -9,6 +9,7 @@ query GetMyInventory {
     unit_price
     sku
     images
+    image_url
     created_at
     updated_at
   }
@@ -25,5 +26,6 @@ query GetInventoryItem($inventory_id: String!) {
     unit_price
     sku
     images
+    image_url
   }
 }

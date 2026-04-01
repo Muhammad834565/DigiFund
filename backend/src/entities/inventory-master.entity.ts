@@ -32,9 +32,9 @@ export class InventoryMaster {
   @Index()
   name: string;
 
-  @Field()
-  @Column({ type: 'text' })
-  description: string;
+  @Field({ nullable: true })
+  @Column({ type: 'text', nullable: true })
+  description?: string;
 
   @Field(() => Float)
   @Column({ type: 'decimal', precision: 15, scale: 2 })
@@ -56,6 +56,10 @@ export class InventoryMaster {
   @Field(() => [String], { nullable: true })
   @Column({ type: 'text', array: true, nullable: true })
   images?: string[];
+
+  @Field({ nullable: true })
+  @Column({ type: 'text', nullable: true })
+  image_url?: string;
 
   @Field()
   @CreateDateColumn()

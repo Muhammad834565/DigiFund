@@ -81,12 +81,13 @@ type InventoryMaster {
   inventory_id: String!
   owner_public_id: String!
   name: String!
-  description: String!
+  description: String
   price: Float!
   quantity: Int!
   unit_price: Float!
   sku: String
   images: [String!]
+  image_url: String
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -222,6 +223,7 @@ type SemanticSearchResult {
   description: String
   price: Float!
   stock: Int!
+  imageUrl: String
   similarityScore: Float!
 }
 
@@ -231,6 +233,7 @@ type ProductRecommendation {
   description: String
   price: Float!
   stock: Int!
+  imageUrl: String
   confidence: Float!
   reason: String!
 }
@@ -536,11 +539,12 @@ input UpdateInvoiceInput {
 
 input CreateInventoryInput {
   name: String!
-  description: String!
+  description: String
   quantity: Int!
   unit_price: Float!
   sku: String
   images: [String!]
+  image_url: String
 }
 
 input UpdateInventoryInput {
@@ -550,6 +554,7 @@ input UpdateInventoryInput {
   unit_price: Float
   sku: String
   images: [String!]
+  image_url: String
 }
 
 input SendRelationshipRequestInput {

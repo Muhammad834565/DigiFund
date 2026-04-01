@@ -55,6 +55,7 @@ interface Product {
   description: string;
   price: number;
   stock: number;
+  imageUrl?: string;
   similarityScore?: number;
   confidence?: number;
   reason?: string;
@@ -84,7 +85,22 @@ export default function ProductGrid({
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {products.map((product) => (
-          <Card key={product.id} className="hover:shadow-lg transition-shadow">
+          <Card
+            key={product.id}
+            className="hover:shadow-lg transition-shadow overflow-hidden"
+          >
+            {product.imageUrl && (
+              <div className="w-full h-48 bg-muted relative">
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              </div>
+            )}
             <CardHeader>
               <div className="flex justify-between items-start">
                 <CardTitle className="text-lg">{product.name}</CardTitle>

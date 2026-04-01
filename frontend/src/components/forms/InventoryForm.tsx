@@ -13,7 +13,7 @@ export function InventoryForm({ inventory }: { inventory?: any }) {
 
   const [optimisticInventory, setOptimisticInventory] = useOptimistic(
     inventory || {},
-    (_state, newInventory: any) => ({ ..._state, ...newInventory })
+    (_state, newInventory: any) => ({ ..._state, ...newInventory }),
   );
 
   return (
@@ -26,11 +26,7 @@ export function InventoryForm({ inventory }: { inventory?: any }) {
     >
       <div>
         <Label>Name</Label>
-        <Input
-          name="name"
-          defaultValue={optimisticInventory.name}
-          required
-        />
+        <Input name="name" defaultValue={optimisticInventory.name} required />
         {/* @ts-ignore */}
         {state.errors?.name && (
           <p className="text-red-500 text-sm">{state.errors.name}</p>
@@ -96,8 +92,22 @@ export function InventoryForm({ inventory }: { inventory?: any }) {
           defaultValue={optimisticInventory.images}
           placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
         />
+        {/* @ts-ignore */}
         {state.errors?.images && (
           <p className="text-red-500 text-sm">{state.errors.images}</p>
+        )}
+      </div>
+
+      <div>
+        <Label>Primary Image URL</Label>
+        <Input
+          name="image_url"
+          defaultValue={optimisticInventory.image_url}
+          placeholder="https://example.com/main-image.jpg"
+        />
+        {/* @ts-ignore */}
+        {state.errors?.image_url && (
+          <p className="text-red-500 text-sm">{state.errors.image_url}</p>
         )}
       </div>
 
