@@ -21,13 +21,9 @@ const nextConfig = {
       },
     ];
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
-  swcMinify: false,
 };
 
 export default nextConfig as any;
