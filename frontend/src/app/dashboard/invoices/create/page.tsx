@@ -4,7 +4,7 @@ import { InvoiceBuilder } from "@/components/forms/InvoiceBuilder";
 export default async function CreateInvoicePage() {
   // Fetch dependencies in parallel
   const [customersData, suppliersData, inventoryData] = await Promise.all([
-    fetchGraphQL(`query { customers { id name } }`),
+    fetchGraphQL(`query { customers { id name email phone address } }`),
     fetchGraphQL(`
       query {
         getSuppliers {
