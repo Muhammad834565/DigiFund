@@ -41,7 +41,7 @@ export function Sidebar({ onClose }: SidebarProps) {
     <aside className="h-full flex flex-col bg-black text-white p-4 overflow-y-auto relative">
       {/* Mobile Close Button - Only visible on small screens */}
       {onClose && (
-        <button 
+        <button
           onClick={onClose}
           className="lg:hidden absolute top-4 right-4 p-2 text-gray-400 hover:text-white transition-colors"
         >
@@ -58,10 +58,15 @@ export function Sidebar({ onClose }: SidebarProps) {
         >
           <User size={20} className="text-white" />
         </Link>
-        
-        <h2 className="text-2xl font-bold tracking-tight text-white ml-8">
-          DigiFund
-        </h2>
+
+        <div className="flex items-center gap-0.5 ml-8">
+          <div className="bg-white rounded-sm p-0.5 flex items-center justify-center">
+            <img src="/Icon1.png" alt="D" className="w-6 h-6 object-contain" />
+          </div>
+          <h2 className="text-2xl font-bold tracking-tight text-white">
+            igiFund
+          </h2>
+        </div>
       </div>
 
       {/* Search Bar */}
@@ -70,13 +75,51 @@ export function Sidebar({ onClose }: SidebarProps) {
       </div>
 
       <nav className="flex-1 space-y-1.5 overflow-y-auto pr-2">
-        <div onClick={onClose}><NavLink href="/dashboard" icon={<LayoutDashboard />} label="Dashboard" /></div>
-        <div onClick={onClose}><NavLink href="/dashboard/finance" icon={<DollarSign />} label="Finance" /></div>
-        <div onClick={onClose}><NavLink href="/dashboard/invoices" icon={<FileText />} label="Invoices" /></div>
-        <div onClick={onClose}><NavLink href="/dashboard/inventory" icon={<Package />} label="Inventory" /></div>
-        <div onClick={onClose}><NavLink href="/dashboard/suppliers" icon={<Truck />} label="Suppliers" /></div>
-        <div onClick={onClose}><NavLink href="/dashboard/customers" icon={<Users />} label="Customers" /></div>
-        <div onClick={onClose}><NavLink href="/shopping" icon={<Store />} label="Shopping v1" /></div>
+        <div onClick={onClose}>
+          <NavLink
+            href="/dashboard"
+            icon={<LayoutDashboard />}
+            label="Dashboard"
+          />
+        </div>
+        <div onClick={onClose}>
+          <NavLink
+            href="/dashboard/finance"
+            icon={<DollarSign />}
+            label="Finance"
+          />
+        </div>
+        <div onClick={onClose}>
+          <NavLink
+            href="/dashboard/invoices"
+            icon={<FileText />}
+            label="Invoices"
+          />
+        </div>
+        <div onClick={onClose}>
+          <NavLink
+            href="/dashboard/inventory"
+            icon={<Package />}
+            label="Inventory"
+          />
+        </div>
+        <div onClick={onClose}>
+          <NavLink
+            href="/dashboard/suppliers"
+            icon={<Truck />}
+            label="Suppliers"
+          />
+        </div>
+        <div onClick={onClose}>
+          <NavLink
+            href="/dashboard/customers"
+            icon={<Users />}
+            label="Customers"
+          />
+        </div>
+        <div onClick={onClose}>
+          <NavLink href="/shopping" icon={<Store />} label="Shopping v1" />
+        </div>
       </nav>
 
       <div className="mt-auto pt-6 space-y-4">
@@ -90,7 +133,7 @@ export function Sidebar({ onClose }: SidebarProps) {
             className="w-full flex items-center justify-center gap-2 font-medium py-2.5 px-4 rounded-lg transition-all hover:translate-y-[-1px] active:translate-y-[1px] bg-[#C0392B] text-white hover:bg-red-700 shadow-md hover:shadow-red-900/20"
             type="submit"
           >
-            <LogOut size={18} /> 
+            <LogOut size={18} />
             <span>Logout</span>
           </button>
         </form>
