@@ -16,7 +16,7 @@ export class OpenRouterService {
     private readonly siteName = 'Ecomerce API'; // Optional: for OpenRouter rankings
 
     // Models
-    private readonly textModel = 'mistralai/mistral-7b-instruct:free'; // Free tier model on OpenRouter
+    private readonly textModel = 'openai/gpt-3.5-turbo'; // Extremely reliable and fast model (OpenRouter wraps it)
     private readonly embeddingModel = 'openai/text-embedding-3-small'; // Embedding model (requires OpenAI credits via OpenRouter)
 
     constructor(private configService: ConfigService) {
@@ -39,6 +39,9 @@ export class OpenRouterService {
         try {
             this.logger.log(`Generating text via OpenRouter: ${prompt.substring(0, 50)}...`);
 
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout to ensure total RAG time (intent + answer) doesn't exceed 30s frontend proxy timeout
+
             const response = await fetch(`${this.baseUrl}/chat/completions`, {
                 method: 'POST',
                 headers: {
@@ -46,6 +49,7 @@ export class OpenRouterService {
                     'HTTP-Referer': this.siteUrl,
                     'X-Title': this.siteName,
                     'Content-Type': 'application/json',
+                    'User-Agent': 'Node/18 (DigiFund Backend)', // Add User-Agent to prevent Cloudflare/OpenRouter blocking
                 },
                 body: JSON.stringify({
                     model: this.textModel,
@@ -53,7 +57,10 @@ export class OpenRouterService {
                         { role: 'user', content: prompt }
                     ],
                 }),
+                signal: controller.signal,
             });
+
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 const errorText = await response.text();
@@ -83,6 +90,9 @@ export class OpenRouterService {
             }
 
 
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
+
             // Note: OpenRouter might route this to OpenAI or another provider
             const response = await fetch(`${this.baseUrl}/embeddings`, {
                 method: 'POST',
@@ -96,7 +106,10 @@ export class OpenRouterService {
                     model: this.embeddingModel,
                     input: text,
                 }),
+                signal: controller.signal,
             });
+
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 const errorText = await response.text();

@@ -50,7 +50,21 @@ export class InvoicesService {
     }
 
     if (!billToUser) {
-      throw new NotFoundException('Bill-to user not found');
+      // Create a temporary guest user if they don't exist
+      const randStr = Math.random().toString(36).substring(2, 10); // 8 chars
+      billToUser = this.userRepository.create({
+        public_id: `t_pb_${randStr}`, // Max 20 chars
+        private_id: `t_pv_${randStr}`, // Max 15 chars
+        contact_person: 'Temporary Customer',
+        email: input.bill_to_email || `temp_${randStr}@example.com`,
+        phone_no: input.bill_to_phone || `t_${randStr}`, // Max 20 chars
+        address: 'No Address Provided',
+        status: 'active',
+        role: 'consumer',
+        password: 'hashed_temp_password',
+        is_verified: false,
+      });
+      await this.userRepository.save(billToUser);
     }
 
     // Find creator

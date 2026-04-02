@@ -92,10 +92,12 @@ export class RagService {
   ): Promise<{ dataNeeded: string[] }> {
     try {
       // Try AI first
-      // const prompt = `...`; 
-      // const response = await this.openRouterService.generateText(prompt);
-      // Use fallback directly to save costs/fix errors
-      throw new Error('Using fallback intent analysis');
+      const prompt = `Determine which database tables are needed for this query: "${query}".
+Options: 'products', 'customers', 'invoices', 'users'.
+Return ONLY a valid JSON string like this: {"dataNeeded": ["table1", "table2"]} with no markdown formatting.`; 
+      const response = await this.openRouterService.generateText(prompt);
+      const parsedText = response.replace(/```json/g, '').replace(/```/g, '').trim();
+      return JSON.parse(parsedText) as { dataNeeded: string[] };
     } catch (error) {
       this.logger.warn('AI intent analysis failed, using rule-based fallback');
       const dataNeeded: string[] = [];
