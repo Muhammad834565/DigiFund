@@ -372,7 +372,7 @@ export default function ChatComponent({
                         : "bg-muted"
                       }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap wrap-break-word">
+                    <p className="text-sm whitespace-pre-wrap break-words overflow-hidden text-clip">
                       {msg.message}
                     </p>
                     <p className="text-xs opacity-70 mt-1">

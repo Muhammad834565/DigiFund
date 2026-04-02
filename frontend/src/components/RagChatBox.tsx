@@ -267,10 +267,10 @@ export function RagChatBox({ isOpen, onClose }: RagChatBoxProps) {
                     {message.type === "user" && (
                       <User className="h-4 w-4 mt-1 shrink-0" />
                     )}
-                    <div className="flex-1">
-                      <p className="text-sm whitespace-pre-wrap">
+                    <div className="flex-1 min-w-0 overflow-hidden">
+                      <div className="text-sm whitespace-pre-wrap break-words">
                         {renderMessageContent(message.content)}
-                      </p>
+                      </div>
 
                       {/* Confidence Score */}
                       {message.confidenceScore && (
