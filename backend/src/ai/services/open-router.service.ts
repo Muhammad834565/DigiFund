@@ -16,7 +16,7 @@ export class OpenRouterService {
     private readonly siteName = 'Ecomerce API'; // Optional: for OpenRouter rankings
 
     // Models
-    private readonly textModel = 'mistralai/mistral-7b-instruct'; // Free tier model on OpenRouter
+    private readonly textModel = 'mistralai/mistral-small-3.1-24b-instruct:free'; // Free tier model on OpenRouter
     private readonly embeddingModel = 'openai/text-embedding-3-small'; // Embedding model (requires OpenAI credits via OpenRouter)
 
     constructor(private configService: ConfigService) {
