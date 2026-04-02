@@ -106,7 +106,7 @@ export class SemanticSearchService {
 
         if (product) {
           results.push({
-            id: String(product.id),
+            id: product.inventory_id || String(product.id),
             name: product.name,
             description: product.description || '',
             price: product.unit_price,

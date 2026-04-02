@@ -1,4 +1,6 @@
 const nextConfig = {
+  // Use a different output directory for dev to prevent deleting production build
+  distDir: process.env.NODE_ENV === 'development' ? '.next-dev' : '.next',
   experimental: {
     // Allow Server Actions from forwarded requests (dev tunnels)
     serverActions: {

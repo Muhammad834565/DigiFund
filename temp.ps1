@@ -1,16 +1,17 @@
+
+$content = @"
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useCreateCustomerMutation, useCreateInvoiceMutation, InvoiceType, InvoiceStatus } from "@/graphql/generated/graphql";
 import { toast } from "sonner";
-import { useCreateCustomerMutation, useCreateInvoiceMutation, GetAllCustomersDocument } from "@/graphql/generated/graphql";
-import { apolloClient } from "@/lib/apollo-client";
+import { ShoppingCart } from "lucide-react";
 
 // Helper function to format description with proper line breaks and bullet points
 function formatDescription(description: string) {
@@ -20,36 +21,30 @@ function formatDescription(description: string) {
     const trimmedLine = line.trim();
     if (!trimmedLine) return <br key={index} />;
 
-    // Handle headings like "Key Features:" and "Perfect for:"
     if (
       trimmedLine.toLowerCase().includes("key features:") ||
       trimmedLine.toLowerCase().includes("perfect for:")
     ) {
       return (
-        <div
-          key={index}
-          className="font-bold text-xs leading-relaxed mt-2 mb-1"
-        >
+        <div key={index} className="font-bold text-xs leading-relaxed mt-2 mb-1">
           {trimmedLine}
         </div>
       );
     }
 
-    // Handle bullet points
     if (
-      trimmedLine.startsWith("•") ||
+      trimmedLine.startsWith("") ||
       trimmedLine.startsWith("*") ||
       trimmedLine.startsWith("-")
     ) {
       return (
         <div key={index} className="flex items-start gap-1 text-xs">
-          <span className="text-primary font-bold mt-0.5">•</span>
+          <span className="text-primary font-bold mt-0.5"></span>
           <span className="flex-1">{trimmedLine.substring(1).trim()}</span>
         </div>
       );
     }
 
-    // Handle regular lines
     return (
       <div key={index} className="text-xs leading-relaxed">
         {trimmedLine}
@@ -85,7 +80,6 @@ export default function ProductGrid({
 }: ProductGridProps) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [generatedInvoice, setGeneratedInvoice] = useState<any>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -100,7 +94,6 @@ export default function ProductGrid({
   const handlePurchaseClick = (product: Product) => {
     setSelectedProduct(product);
     setFormData({ ...formData, quantity: 1 });
-    setGeneratedInvoice(null);
     setIsDialogOpen(true);
   };
 
@@ -109,58 +102,43 @@ export default function ProductGrid({
     if (!selectedProduct) return;
 
     try {
-      let customerId: string | undefined = undefined;
-
-      // 1. Check if a customer with the entered email already exists
-      const existingCustomers = await apolloClient.query({
-        query: GetAllCustomersDocument,
-        fetchPolicy: "network-only"
-      });
-
-      const existingUser = existingCustomers.data?.customers.find(
-        (c: any) => c.email?.toLowerCase() === formData.email.toLowerCase()
-      );
-
-      if (existingUser) {
-        customerId = existingUser.id;
-        // Optionally notify the user
-        // toast.info("Existing customer profile found. Generating invoice...");
-      } else {
-        // 2. If not, create a new customer
-        const customerRes = await createCustomer({
-          variables: {
-            input: {
-              name: formData.name,
-              email: formData.email,
-              phone: formData.phone,
-              address: formData.address,
-            }
-          }
-        });
-        customerId = customerRes.data?.createCustomer.id;
-      }
-
-      if (!customerId) throw new Error("Failed to resolve or create customer");
-
-      // 3. Generate the invoice using the customer's email so the backend finds their registered user account
-      const invoiceRes = await createInvoice({
+      // 1. Create Customer
+      const customerRes = await createCustomer({
         variables: {
           input: {
-            bill_to_email: formData.email,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            address: formData.address,
+          }
+        }
+      });
+      const customerId = customerRes.data?.createCustomer.id;
+      if (!customerId) throw new Error("Failed to create customer");
+
+      // 2. Create Invoice
+      await createInvoice({
+        variables: {
+          input: {
+            bill_to_public_id: customerId,
+            invoice_type: InvoiceType.Sales,
+            status: InvoiceStatus.Draft,
             items: [
               {
-                inventory_id: selectedProduct.id,
+                inventory_id: parseFloat(selectedProduct.id),
                 qty: formData.quantity,
                 rate: selectedProduct.price,
                 discount_percentage: 0,
               }
             ],
+            issue_date: new Date().toISOString().split("T")[0],
+            due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
           }
         }
       });
 
       toast.success("Order placed successfully! Invoice generated.");
-      setGeneratedInvoice(invoiceRes.data?.createInvoice);
+      setIsDialogOpen(false);
       setFormData({ name: "", email: "", phone: "", address: "", quantity: 1 });
     } catch (error: any) {
       toast.error(error.message || "Failed to process order");
@@ -315,112 +293,73 @@ export default function ProductGrid({
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
-          {generatedInvoice ? (
-            <>
-              <DialogHeader>
-                <DialogTitle className="text-green-600 flex items-center gap-2">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Success! Order Placed
-                </DialogTitle>
-                <div className="pt-4 space-y-4">
-                  <div className="bg-muted/50 p-4 rounded-lg space-y-2 text-sm">
-                    <div className="flex justify-between border-b pb-2">
-                      <span className="text-muted-foreground">Invoice No:</span>
-                      <span className="font-medium">{generatedInvoice?.invoice_number}</span>
-                    </div>
-                    <div className="flex justify-between border-b pb-2">
-                      <span className="text-muted-foreground">Status:</span>
-                      <Badge variant="outline">{generatedInvoice?.status}</Badge>
-                    </div>
-                    <div className="flex justify-between pt-2">
-                      <span className="font-semibold text-base">Total Amount:</span>
-                      <span className="font-bold text-base">${generatedInvoice?.total_amount}</span>
-                    </div>
-                  </div>
-                  <p className="text-sm text-center text-muted-foreground">
-                    You can view the full details in your invoice dashboard.
-                  </p>
-                </div>
-              </DialogHeader>
-              <div className="mt-4 pb-2">
-                <Button 
-                  className="w-full"
-                  onClick={() => setIsDialogOpen(false)}
-                >
-                  Close & Continue
-                </Button>
-              </div>
-            </>
-          ) : (
-            <>
-              <DialogHeader>
-                <DialogTitle>Order {selectedProduct?.name}</DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4 pt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    required
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="address">Shipping Address</Label>
-                  <Input
-                    id="address"
-                    required
-                    value={formData.address}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="quantity">Quantity</Label>
-                  <Input
-                    id="quantity"
-                    type="number"
-                    min="1"
-                    max={selectedProduct?.stock || 1}
-                    required
-                    value={formData.quantity}
-                    onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 1 })}
-                  />
-                </div>
-                <DialogFooter>
-                  <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={creatingCustomer || creatingInvoice}>
-                    {creatingCustomer || creatingInvoice ? "Processing..." : "Place Order"}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </>
-          )}
+          <DialogHeader>
+            <DialogTitle>Order {selectedProduct?.name}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input
+                id="name"
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                type="email"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                required
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="address">Shipping Address</Label>
+              <Input
+                id="address"
+                required
+                value={formData.address}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="quantity">Quantity</Label>
+              <Input
+                id="quantity"
+                type="number"
+                min="1"
+                max={selectedProduct?.stock || 1}
+                required
+                value={formData.quantity}
+                onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 1 })}
+              />
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={creatingCustomer || creatingInvoice}>
+                {creatingCustomer || creatingInvoice ? "Processing..." : "Place Order"}
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
   );
 }
+"@
+Out-File -FilePath frontend/src/components/ProductGrid.tsx -InputObject $content -Encoding UTF8
+

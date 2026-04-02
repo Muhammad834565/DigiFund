@@ -1,6 +1,30 @@
+# Dependencies
 /frontend/node_modules
-/frontend/.next
-/frontend/.env   
-/backend/dist
-/backend/.env   
 /backend/node_modules
+
+# Frontend build outputs
+/frontend/.next
+/frontend/.next-dev
+/frontend/out
+
+# Backend build outputs
+/backend/dist
+
+# Environment variables
+/frontend/.env
+/frontend/.env.*
+/backend/.env
+/backend/.env.*
+
+# Logs and debug files
+*.log
+npm-debug.log*
+/frontend/*_log.txt
+/frontend/lint_output.txt
+/backend/temp_*.txt
+/backend/output.txt
+
+# OS & Editor files
+.DS_Store
+.vscode/
+.idea/

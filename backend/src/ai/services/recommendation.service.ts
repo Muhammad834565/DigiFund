@@ -48,7 +48,7 @@ export class RecommendationService {
     });
 
     return products.map((product) => ({
-      id: String(product.id),
+      id: product.inventory_id || String(product.id),
       name: product.name,
       description: product.description || 'No description available',
       price: Number(product.unit_price),
